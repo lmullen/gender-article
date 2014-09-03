@@ -3,4 +3,4 @@
 install.packages(c("devtools", "knitr", "packrat"), dependencies = TRUE)
 library(devtools)
 install_github("lmullen/gender-data-pkg")
-install_github("ropensci/gender", branch = "develop") # development version
+install_github("ropensci/gender", ref = "develop") # development version
