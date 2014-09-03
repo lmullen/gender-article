@@ -5,8 +5,10 @@ output: html_document
 ---
 
 ```{r}
+library(genderdata)
 library(gender)
 library(dplyr)
+library(ggplot2)
 ```
 
  
@@ -23,7 +25,27 @@ The problem arises from the fact that the link between gender and naming practic
 [CITE: literature on baby names generally]
  
 [GRAPHIC chart of changes in names – from README]
+
 [GRAPHIC showing change in popularity of names like Madison]
+
+```{r}
+plot_names <-  c("madison",
+                 "keanu",
+                 "addison",
+                 "jan",
+                 "sydney",
+                 "morgan",
+                 "leslie")
+
+ssa_national %>%
+  filter(name %in% plot_names) %>%
+  mutate(proportion_female = female / (female + male)) %>%
+ggplot(aes(x = year, y = proportion_female, color = name)) +
+  geom_line() +
+  ggtitle("Changes in selected names")
+
+```
+
  
 For researchers working on contemporary subjects the “Leslie” problem is not an especially pressing one. An education policy analyst studying the demographics of different urban school districts, for instance, can turn to a variety of tools that use current databases of names. (http://genderize.io/, http://genderchecker.com/about-us.aspx) These tools will most likely identify the gender of Leslie Fay correctly. But researchers studying historical subjects need to take into account the dynamic relationship between gender and naming practices. If that same researcher wanted to compare the demographics of contemporary urban schools with those from the early twentieth century, Leslie Fay’s gender would get misidentified. And the “Leslie” problem is not just one for historians studying the past. Anyone studying a longer timeframe will also encounter this problem: as of 2012, the average American has a lifespan of nearly seventy-nine years – more than enough time for naming practices to change quite dramatically. (cite World Bank).
  
