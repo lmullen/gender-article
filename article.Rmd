@@ -1,7 +1,6 @@
 ---
-title: "Gender Article"
+title: "Jane, John … Leslie? Algorithmic Gender Detection"
 author: "Cameron Blevins and Lincoln Mullen"
-date: "September 2, 2014"
 output: html_document
 ---
 
@@ -10,3 +9,206 @@ library(gender)
 library(dplyr)
 ```
 
+ 
+### Abstract
+
+This paper combines two trends in the humanities: the rise of gender as an analytical lens of inquiry and the proliferation of large, machine-readable datasets. It outlines a new method for algorithmically inferring the gender of a name by incorporating historical data to better reflect how naming practices change over time. This method ensures a higher level of accuracy with a precise statement of its reliability in inferring gender while tailoring it for humanistic study. Predicting gender from names requires a fundamentally historical method, which is demonstrated in this article. The article reports on the “gender” package for R which implements this method. The article demonstrates the method’s utility by applying it to a case study examining gender representation in the historical profession.
+
+### INTRODUCTION. The "Leslie" Problem
+ 
+As researchers grapple with larger and larger datasets they are increasingly using algorithms not just to extract information from existing data, but to infer additional information from a dataset. [find example – network analysis, maybe http://kieranhealy.org/blog/archives/2013/06/09/using-metadata-to-find-paul-revere/] Many of these datasets are made up of records of individual people, such as company payrolls or military rosters. Some might contain associated information like a person’s home address, age, or rank. Other datasets contain little more than a personal name. What kind of information can researchers infer from just a name? Perhaps most fundamentally, a person’s gender can often be inferred from just their first name. “Jane Fay” is almost certainly a woman, while her brother “John Fay” is almost certainly a man. A straightforward computer program can infer their respective genders with relative ease.
+ 
+The problem arises from the fact that the link between gender and naming practices, like language itself, is not static. What about Jane and John Fay’s long-lost third sibling, Leslie? If Leslie was born in the past sixty years, chances are good that she would be their sister. But if the three siblings were born in the early twentieth century, chances are good that Leslie would be their brother. That is because the gendered naming convention surrounding “Leslie” had completely flipped over the course of one hundred years. 92% of the babies born in the United States in 1900 who were named “Leslie” were male, while 96% of those identically named babies born in the year 2000 were female. A similar pattern holds true for any number of American names: Madison, Morgan, Sydney, Kendall. The historical change in the prevailing gender of a name tends to follow set patterns. In general, names tend to shift from being predominantly male to being predominantly female; the shift almost never happens in the other direction. The reason that the shift tends to be from male to female depends on the cause of the shift. In general names that move from male to female are also shifting from being unpopular to popular names.For example the name Madison changed from male to female suddenly after the 1985 because the name became extremely popular for naming baby girls, whereas before it had been an infrequently used male name. In other words, since the late twentieth century US at any rate, girls are more likely than boys to be receive a trendy name, and once a trendy name is associated with females it is unlikely to be used for males. The few exceptions of names which go from being female to male, such as Jan, have a different causal mechanism: it seems likely that Jan as an English name is female but that Jan as a Scandinavian (Finnish? Swedish?) name is male. Because the name is relatively unpopular, changing patterns of immigration can explain the change.
+
+[CITE: literature on baby names generally]
+ 
+[GRAPHIC chart of changes in names – from README]
+[GRAPHIC showing change in popularity of names like Madison]
+ 
+For researchers working on contemporary subjects the “Leslie” problem is not an especially pressing one. An education policy analyst studying the demographics of different urban school districts, for instance, can turn to a variety of tools that use current databases of names. (http://genderize.io/, http://genderchecker.com/about-us.aspx) These tools will most likely identify the gender of Leslie Fay correctly. But researchers studying historical subjects need to take into account the dynamic relationship between gender and naming practices. If that same researcher wanted to compare the demographics of contemporary urban schools with those from the early twentieth century, Leslie Fay’s gender would get misidentified. And the “Leslie” problem is not just one for historians studying the past. Anyone studying a longer timeframe will also encounter this problem: as of 2012, the average American has a lifespan of nearly seventy-nine years – more than enough time for naming practices to change quite dramatically. (cite World Bank).
+ 
+Our solution to the “Leslie” problem is to create a library that explicitly takes into account changes in naming practices. The program incorporates this temporal dimension using historical databases to more accurately infer whether “Leslie” was male or female depending on when he or she lived. It not only achieves better accuracy in inferring gender, but it also provides the relative likelihood of a person’s gender for a given range of years: 52% of the babies named “Leslie” born in 1950 were girls and 48% were boys.  Rather than a black box spitting out a stark FEMALE or MALE designation, the program computes a measurement for each gender’s relative “share” of a given name. This allows researchers to conduct more nuanced analysis and to determine for themselves what proportion is acceptable for making a prediction of male or female.
+
+We recognize that gender is a fluid concept, both today and in the past, and that this method glosses over the complexities of historical definitions of gender and of the relationship between biological sex and gender. In some sense this is necessary since the large data sets which make this kind of analysis possible were created by state agencies, and for gender (as for race) state agencies have created a limited number of categories which have tremendous definitional power. [CITE e.g. Margot Canady, The Straight State; works on e.g. Virginia’s definition of race. Shane Landrum on birth certificates. James C. Scott on Seeing Like a State or is that obvious to everyone by now?] Nevertheless, this method is suitable for two reasons. First, researchers are likely to use this method in the aggregate rather than for individuals. The assumption that a name implies male or female (and that those are possible categories to be inferred) has a higher validity when applied to large groups of people than it does when applied to individuals. Second, this methods is neutral as to what the categories male or female actually mean in any given historical context. Researchers are free---indeed, obligated---to make that determination for themselves, and this package provides access to the underlying data set so that a technologically competent researcher can interrogate every assumption through the process. This method does not argue against the complexities of historical understandings of gender, but as with any project it does require researchers who use the method to think through how the data was gathered, what it implies, and how it reflects social and cultural practices.
+ 
+The remainder of the article is divided into two sections. First, we present the methodology of our approach by comparing it to existing methods and detailing the strengths and weaknesses of the program. Second, we apply the method to a case study in order to demonstrate how humanities scholars might use it by analyzing gender representation within the historical profession.
+ 
+PART I. The Method
+ 
+Existing Methods:
+
+The historical method to be described below may be compared to a method available in the Natural Language Toolkit for Python. The NLTK provides many tools for analyzing natural language, including two lists of male and female names created by Mark Kantrowitz with assistance from Bill Ross. This list includes 7579 [DOUBLE CHECK] unique names. Using the Kantrowitz names corpus in NLTK, one could look up a name like Jane or John and find out that it is male or female. [NOTE: The Kantrowitz corpus is also implemented in the gender package for R for comparison, though its use is not recommended for actual research.]
+
+[SAMPLE OUTPUT in Python from NLTK names corpus converted to an array of tuples.]
+
+[('Aaron', 'male'), 
+('Abbey', 'male'), 
+('Abbie', 'male'), 
+('Abbot', 'male')
+('Zorine', 'female'), 
+('Zsa Zsa', 'female'), 
+('Zsazsa', 'female'), 
+('Zulema', 'female'), 
+('Zuzana', 'female')]
+
+[CITE: Link to original name corpus: http://www.cs.cmu.edu/afs/cs/project/ai-repository/ai/areas/nlp/corpora/names/0.html]
+
+The most significant problem with the Kantrowitz names corpus and thus the NLTK implementation is that it assumes that names are timeless. As pointed out above, this makes the corpus unusable for historical purposes. Furthermore the corpus includes some oddities which make it less suitable. Some names like “Bill” are overwhelmingly male, but the corpus includes them as both male and female. And because the Kantrowitz corpus contains only 7,579 (a mere 8.2% of the 91,320 names released by the Social Security Administration for the US alone) there are many names that it cannot identify. [NOTE: The SSA data includes only names used more than 5 times in a given year, so the “long tail” of actual number of names in the US is considerably larger. Link to SSA data.] In this chart, for example, the “unidentified” category grows rapidly after 1965. While our Social Security method relies primarily on children born in the US but also people who become naturalized citizens (double check) whereas as census data for example also includes immigrants, nevertheless it does far better at identifying non-European names since it contains over an order of magnitude more names.
+ 
+
+ 
+[CITE existing literature on gender classification]
+
+We mention the Kantrowitz name corpus as implemented in NLTK because the Natural Language Toolkit is rightly regarded as influential for scholarship. It’s flaws are also emblematic of the problems with most other implementations of gender prediction algorithms. The Genderize website and API is, for example, a much more sophisticated implementation of a gender prediction. Besides predicting male or female for gender, it also reports the proportion of male or female names, along with a count of the number of uses of the name that it is basing its prediction on. Genderize will also permit the user to customization a prediction for different countries: an extremely important feature. Genderize includes “database contains 142848 distinct names across 77 countries and 85 languages.” Genderize is unsuitable for historical work, however, because it is based only on contemporary data. According to the documentation for its API, “It utilizes big datasets of information, from user profiles across major social networks.” [SOURCE: http://genderize.io] It would be anachronistic to apply these datasets to the past, and Genderize provides no functionality to filter results chronologically as it does geographically. [NOTE: A wrapper to the genderize API is included in the gender package. There are also wrappers available in Ruby and Python. There are a number of other website which provide similar functionality based on apparently similar datasets, none of which permit historical variation.)
+ 
+Surprisingly, CRAN does not include any packages for doing this in R, though some packages do include functions for this. Python has no existing package (double check) besides the NLTK and Genderize.Thus the two of the most commonly used languages for data analysis, particularly within the digital humanities community, have no satisfactory package that could easily solve the problem of discovering the gender of names, though options for geocoding, for example, abound.
+ 
+The Solution:
+
+The possibilities for encoding gender from names depends on two things. First, it depends on having a suitable (and suitably large) data set for the time period and region under study. Unsurprisingly such data sets are almost always gathered in the first instance by states, though the compilation and digitization may be undertaken by scholarly researchers. Second, it depends on a suitable algorithms for estimating the proportion of male and female names for a given year, or range of years since often a person cannot be associated with an exact date. It is important that the algorithm take into account any biases in the data to make correct predictions.
+
+Data: 
+
+Besides including the 
+
+The Social Security Administration provides annual data on the names and genders of babies stretching back to the year 1880. This is database encompases 91,320 unique names. For comparison, [example of other databases and their size]. What makes it even more useful, however, is its temporal dimension. This allows a researcher to figure out not just the likelihood that “Leslie” is a male or female name, but the likelihood that “Leslie” is a male or female name for a specific range of years, or for a specific year.
+ 
+Using for example the SSA data for a few names (once it has been munged into a more useful form). The columns male and female record the number of people of that gender (sex?) born in that year who received Social Security cards.
+ 
+name         year    female     male
+---------  ------  --------  -------
+jane         1890       372        0
+jane         1990       771        8
+john         1890        56     8502
+john         1990        81    29066
+madison      1890         0       14
+madison      1990      1407      145
+ 
+Furthermore, we can calculate the proportions of male and female and on that basis guess the gender for a given year.
+ 
+name         year    female     male    proportion_male    proportion_female  gender  
+---------  ------  --------  -------  -----------------  -------------------  --------
+jane         1890       372        0             0.0000               1.0000  female  
+jane         1990       771        8             0.0103               0.9897  female  
+john         1890        56     8502             0.9935               0.0065  male    
+john         1990        81    29066             0.9972               0.0028  male    
+madison      1890         0       14             1.0000               0.0000  male    
+madison      1990      1407      145             0.0934               0.9066  female
+ADD LESLIE AND ANOTHER EXAMPLES WE USE
+ 
+Furthermore, one can specify a range of years and calculate the proportion for that time period.
+ 
+Given this data set, it is simple to perform perform a merge (a join, in SQL terms) on either a name or a combination of name and year to link this data to a date set.
+ 
+Our program is best understood through an example. Let’s say a historian is working with records from a public school system and wants to know what percentage of its total student body each year was male or female. This historian can tell the program the approximate age range of its target population - in this case, ages 4 to 18. Our program then iterates through all of the names attempting to identify their gender based on a) the date of the data, and b) the age range specified by the user. Sidney Dubner, for instance, was enrolled as a student in the year 1918. Given the age range of 4 to 18 specified by the user, the program guesses that Sidney Dubner was born between 1900 and 1914. It then looks up every birth of a child named “Sidney” recorded by the Social Security Administration between 1900 and 1914 and calculates that 94.7% of these babies named “Sidney” were male. Chances are good that this was a male student. But what if the year was 1998 instead of 1918? The chances that “Sidney” was a boy falls to 66.4%. Fast-forward another ten years to 2008, and suddenly it’s more likely that “Sidney” is in fact a girl, not a boy (69.3% female to 30.7% male).
+ 
+Reference Implementations/Software:
+ 
+Description of Lincoln’s R package [link].
+ 
+Implements both the Kantrowitz method and this new method. Extensible through the addition of additional data sets as they become available.
+Includes cleaned up, tidied (in the Hadley Wickham sense) versions the Kantrowitz data sets and the SSA national and state data. (Link to gender repo.) These allow researchers to load the package and use the data directly, in addition to accessing through methods. Furthermore
+Allows for encoding of individual names by year, of data sets where each name is associated with a year, and data sets where there are names of years and a range of years is provided. Eventually will include ability to specify by
+Samples of code:
+ 
+find_gender(“madison”) # returns “female” and probability
+find_gender(“madison”, 1990) # returns “female” and probability
+find_gender(“madison”, 1890) # returns “male” and probability
+ 
+year  name     
+------  ---------
+ 1890  john     
+ 1990  john     
+ 1990  john     
+ 1890  jane     
+ 1990  jane     
+ 1890  madison  
+ 2012  madison
+For data sets where there is no year available, you can specify the range.
+find_gender(test_data, years = c(1880, 1940)) # returns male, male, male, male, female, female
+ 
+For data sets where there is a year available, say a year of birth, then you can specify the column that stores that data, and each person will be looked up individually.
+find_gender(test_data, year_column = T) # returns male, female, male, male, female, female
+ 
+In cases where the data set includes non-birth date, and because those dates vary significantly, one wishes to operate on the basis of date, one is advised to split up the data into cohorts, apply the gender checking methods, then recombine the split up data sets. (This is akin to Wickhams Split Apply Combine method: citation to article.) In this example of the dissertations data sets, I have split the data set into people whose dissertations were before 1950 and those who were after. (In actual practice, I would use more fine grained cohorts, and a more sophisticated method for splitting and applying, such as the `ddply` command in `plyr`.)
+ 
+library(dplyr)
+dissertations_before_1950 <- dissertations %.%
+ filter(year < 1950)
+dissertations_after_1950 <- dissertations %.%
+ filter(year >= 1950)
+dissertations_before_1950 <- dissertations_before_1950 %.%
+ find_gender(years = c(1880,1940)) # reasonable guess as to ages
+dissertations_after_1950 <- dissertations_after_1950 %.%
+ find_gender(years = c(1930,1990)) # reasonable guess as to ages
+dissertations_combined < rbind(dissertations_before_1950, dissertations_after_1950)
+ 
+ 
+Limitations:
+ 
+ 
+On the methodological front, perhaps the program’s most glaring limitation is its weakness in inferring the gender of non-American names. Once again, this is a reflection of where the source data originated: U.S. government agencies. More recent datasets exist for non-American names, but we have been unable to find or incorporate information on how these names have changed over time. The program is extensible, however, meaning that if someone does locate a suitably temporal dataset of non-American names they can implement it into our program.
+ 
+Our program uses source data that only goes back as far as 1880, making it a far more effective method for twentieth-century analysis. Additionally, our program is not as effective at identifying highly uncommon names. The annual reference data it uses from the Social Security Administration only includes baby names that occurred at least five times in a given year. If a name was never given to five or more babies over the course of any year from 1880 to the present, our program will not be able to infer its gender. [more details – see below?]
+[- SSA restricts its data to only names with at least 5 occurrences (we’re still missing a bit of the long tail). Not a big problem because we still have more names, and more obscure names, than any other data set. More of a problem when localizing to the state, which starts in 1910 (double check) and because it includes only >5 occurrences in much smaller jurisdictions, more of the long tail is cut off.]
+ 
+PART II. Measuring Gatekeeping in the Historical Profession
+ 
+In a 2005 report for the American Historical Association, Elizabeth Lunbeck acknowledged “a sea change in the [historical] profession with respect to gender” before going on to describe the painful limitations of this sea change for female historians: ongoing personal discrimination, lower salaries, and barriers to securing high-ranking positions. Lunbeck’s report drew in part on a survey of 362 female historians that produced a rich source of responses detailing the deep and multi-faceted challenges facing women in the profession. What follows is a quantitative supplement to Lunbeck’s analysis that uses our program to analyze gender representation amongst historians across a much larger scale and a much longer time period. http://www.historians.org/Documents/About%20AHA%20and%20Membership/CWH-Report_5.20.05.pdf
+ 
+ 
+Our analysis focuses on one of the bedrocks of the historical profession: scholarly research. We begin with the history dissertation, often the defining scholarly output of a historian’s early career. The completion of a dissertation marks a standardized moment of transition out of the “training” phase of the historical profession. Data supplied by ProQuest provided roughly [80,000] PhD(?) dissertations completed since [1950]. Identifying the gender of their authors gives a sense for the number of women and men who are completing PhD-level training in history each year. Our program uses what year a historian wrote their dissertation to estimate a period for when they might have been born: a historian who completed their dissertation in 1980 was likely born between ____ and _____. Using this temporal information, we are better able to infer their gender and chart how the larger representation of women and men changes year-by-year. 
+ 
+[chart – raw numbers]
+ 
+Another way to examine this trend is to look at the proportion of male and female dissertation authors over time, which smoothes out changes in the absolute number of dissertations produced. The proportion of dissertations written by women has steadily increased over the past half-century, a change that began in the late 1960s and continued through the early 2000’s. Since that point, the proportion of dissertations written by women has largely plateaued at a few percentage points below the proportion written by men. Female historians have achieved something approaching parity with male historians in terms of how many women and women complete dissertations each year.
+ 
+[chart - proportion]
+ 
+But what happens after the dissertation? It is, after all, only the first major stage of a historian’s research output. The “coin of the realm” for many historians remains the publication of a scholarly monograph to be read and evaluated by peers. This process often takes the form of book reviews published in academic journals. One of the leading journals in the historical profession is the American Historical Review, the flagship journal of the American Historical Association. Along with a few dozen articles The AHR publishes five issues each year that contain, in aggregate, roughly one thousand books reviews covering (in its own words) “every major field of historical study.” The AHR is not only one of the widest-ranging journals in the profession, it is also the oldest; the journal has been publishing continuously since 1895. The range, scope, and length of the AHR makes it an ideal source to analyze the historical profession on a large scale.
+ 
+We take the AHR as a rough proxy for gatekeeping within the larger historical profession. When a book appears in the AHR it serves as a signal that other historians in positions of power have “approved” it for consideration. This signal is not necessarily correlated with the quality of the book. Even if it garners a negative review, the fact that it appears in the journal at all is a measure of the fact that the profession’s gatekeepers have deemed it important enough to review. On the flip side, a book that does not appear in the AHR may have gone on to have a significant impact on the profession. It is precisely this professional gatekeeping dimension that makes the AHR useful to study in the context of gender representation.
+ 
+Scraping the table-of-contents of every issue of the American Historical Review results in a dataset of close to 60,000 books reviewed by the journal since it began publication in 1895. Our program then inferred the gender of the authors of these books, which we could then use to plot the proportion of female and male authors over time. The temporal trajectory of gender representations roughly resembles that of history dissertations: women began making inroads in the late 1960s and have made steady gains over the past four decades. By the twenty-first century the proportion of female authors reviewed in the AHR had more than tripled.
+ 
+[graphic]
+ 
+But a closer look shows important differences between the proportion of women writing history dissertations and the proportion of women appearing in the AHR. Although both have trended upwards since the 1970s the slope is a lot steeper for dissertations than it is for the AHR. Female historians have very nearly closed the gaps in terms of newly completed dissertations, but the glass ceiling remains stubbornly low in terms of what happens from that point onwards. In book reviews published in the AHR male authors continue to outnumber female authors by a factor of nearly 2 to 1. The long-term gains made by female doctoral students do not carry over in the pages of the historical profession’s leading journal.
+ 
+[chart comparing dissertations with AHR]
+ 
+The path from a dissertation to an AHR book review is not an automatic one. Not all dissertations are published as books, not all books are submitted to the American Historical Review, and not all book submissions are accepted by the AHR editors for review. As of August 2014 the journal’s website reminds readers that “the AHR receives over 3,000 books a year; we have the resources to publish at most 1,000 reviews a year (approximately 200 per issue).” (http://www.indiana.edu/~ahrweb/book_review_guide.html - retrieved August 25 2014). Fewer and fewer female historians make it through each successive step. Establishing a single causal reason for this pattern is all but impossible, and instead a murky concoction of interrelated factors likely contributes to the gap. For one, a 2010 survey by the American Historical Association revealed the female historians dedicated substantially more time to child and elder care than their male colleagues, leaving less time for research. This gender gap is more likely to impact the production of a book than a dissertation, as graduate students are generally younger and less likely to be juggling child-rearing responsibilities while writing than their older peers. More insidiously, women continue to face insidious gender discrimination.
+ 
+We then used our program to infer the gender of not just book authors reviewed by the AHR, but the gender of the reviewers themselves. The story is much the same for reviewers as it is for authors: more than than twice as many men as women appear as reviewers in the journal. But gender inflects book reviews in less direct ways by shaping who writes reviews of which book authors. About three times as many men write reviews of male-authored books as do women. In the case of female-authored books the ratio of female-to-male reviewers is much closer to 50/50. In short, women are much more likely to write reviews of other women. And while men still write the majority of reviews of female-authored books, they tend to gravitate more towards male authors – who are, of course, already over-represented in the AHR.
+ 
+[chart: male authored books]
+[chart: female authored books]
+ 
+The American Historical Association also categorizes their reviews under different historical sub-fields. Although the journal’s taxonomy has changed quite a bit over time, it did allow us to refine our analysis. Were there more reviews of female authors in certain sub-fields rather than others, and has that changed over the past forty years? Caribbean/Latin American history has had something approaching equal representation for the past decade-and-a-half. In both African history and Ancient/Medieval history female historians made some quite dramatic gains during the late-nineties and aughts. The guiltiest parties, however, are also the two subject categories that publish the most book reviews in the AHR: Modern/Early Modern Europe and the United States/Canada. Both sub-fields have made progress over the four decades but still hover at around two-thirds male. Gender representation is not evenly distributed across the profession.
+ 
+[chart – sub-fields]
+ 
+One 2013 analysis of 2,500 recent history Ph.D.’s found that “gender played little role in employment patterns across particular professions and industries.” (http://historians.org/Documents/Many_Careers_of_History_PhDs_Final.pdf) Our own analysis reveals a more complicated reality. The flagship journal of professional historians continues to publish twice as many reviews of books by female authors as male authors. This disparity is put into even sharper relief when set against the relative parity achieved by women in producing history dissertations. Women might be getting hired at comparable rates to men, but discriminatory gatekeeping remains alive and well in the historical profession. Our program allows us to quantitatively measure the scope of the problem on a large scale, how it’s changed over time, and what remains to be done.
+ 
+Conclusion
+ 
+Our contributions:
+
+-     Broadly: gender studies + big data
+-   	Temporal dimension makes it better suited to fit the needs of humanities research than contemporary approaches – both more accurate (historical) and more nuanced (supplying the gendered proportion of a name for different periods)
+-   	Extensible – non US-names, older names. (future work)
+ 
+ 
+ 
+ 
+The fundamental points are that we have a much larger corpus of names. More importantly the ability to vary the look up based on a specific date of birth or a specified range of dates. Making this much more useful for historians, but also for any research in any field, given that the normal human lifespan present in any data set means that names can vary as much as a century, and so everyone needs to be using a fundamentally historical method. (Take that, sociologists.)
+ 
+ 
+Future work:
+ 
+Both the Python script and the R package are easily extensible to allow additional data sets, say from other countries. (Are there other data sets, say for Great Britain, http://data.gov.uk/data/search?q=names ??) And eventually perhaps US census data, which would solve the 19th century problem.
+ 
+Works Cited:
+ 
+ 
+ 
