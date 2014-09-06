@@ -10,15 +10,21 @@ packrat to install the dependencies manually:
 
 1.  Install Devtools and Packrat:
 
-    install.packages(c("devtools", "packrat"))
+```
+install.packages(c("devtools", "packrat"))
+```
 
 2.  Turn on Packrat mode:
 
-    packrat::on()
+```
+packrat::on()
+```
 
 3.  Install the dependencies:
 
-    packrat::restore()
+```
+packrat::restore()
+```
 
 You should then be able to generate the article by opening `article.Rmd`
 and clicking "Knit HTML" (more on using [RMarkdown][]).
