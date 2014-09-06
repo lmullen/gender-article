@@ -87,6 +87,11 @@ Version: 1.0.0
 Hash: c8bff66238347472f08b6a35608539ff
 Requires: digest, gtable, MASS, plyr, proto, reshape2, scales
 
+Package: gridExtra
+Source: CRAN
+Version: 0.9.1
+Hash: 1cb7af8c140431ec4e99905f1d8adcc4
+
 Package: gtable
 Source: CRAN
 Version: 0.1.2
@@ -161,6 +166,15 @@ Package: mime
 Source: CRAN
 Version: 0.1.2
 Hash: 08ae994b18677717b786ade9c113b6ea
+
+Package: mullenMisc
+Source: github
+Version: 0.1.5
+Hash: f1d5a0a1711ee3f458fa7e69f7fcda81c271c40c
+GithubRepo: mullenMisc
+GithubUsername: lmullen
+GithubRef: master
+GithubSha1: f1d5a0a1711ee3f458fa7e69f7fcda81c271c40c
 
 Package: munsell
 Source: CRAN
