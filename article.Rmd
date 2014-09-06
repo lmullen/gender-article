@@ -4,28 +4,61 @@ author: "Cameron Blevins and Lincoln Mullen"
 output: html_document
 ---
 
-```{r, echo=FALSE, message=FALSE}
+```{r load-libraries, include=FALSE}
 library(genderdata)
 library(gender)
 library(dplyr)
 library(ggplot2)
+library(mullenMisc)
+library(knitr)
+
+# TRUE to show code and warnings; FALSE to remove them for publication
+display_code_blocks(FALSE)
 ```
 
 ### Abstract
 
-This paper addresses two trends in the humanities: the rise of gender as an analytical tool and the proliferation of large, machine-readable datasets. It outlines a new method for algorithmically inferring the gender of a name from historical data in order to take into account how naming practices change over time and space. In contrast to existing methods of predicting gender, this method provides a higher level of accuracy and a precise statement of the likelihood that a name is a given gender. The article reports on the [Gender](https://github.com/ropensci/gender) package for the [R programming language](http://www.r-project.org/) which implements this method. The article demonstrates the method's utility by applying it to a case study in which we study gender in the history profession by inferring the gender of authors of history dissertations and of authors and reviewers in the *American Historical Review*.
+This paper addresses two trends in the humanities: the rise of gender as an analytical tool and the proliferation of large, machine-readable datasets. It outlines a new method for algorithmically inferring the gender of a name from historical data in order to take into account how naming practices change over time and space. In contrast to existing methods of predicting gender, this method provides a higher level of accuracy and a precise statement of the likelihood that a name is a given gender. The article describes the methodology as implemented in the [Gender](https://github.com/ropensci/gender) package for the [R programming language](http://www.r-project.org/). The article demonstrates the method's utility by applying it to a case study in which we study gender in the history profession by inferring the gender of authors of history dissertations and of authors and reviewers in the *American Historical Review*.
 
-### INTRODUCTION. The "Leslie" Problem
+### Introduction: The "Leslie" Problem
  
-As researchers grapple with larger and larger datasets they are increasingly using algorithms not just to extract information from existing data, but to infer additional information from a dataset. [find example – network analysis, maybe http://kieranhealy.org/blog/archives/2013/06/09/using-metadata-to-find-paul-revere/] Many of these datasets are made up of records of individual people, such as company payrolls or military rosters. Some might contain associated information like a person’s home address, age, or rank. Other datasets contain little more than a personal name. What kind of information can researchers infer from just a name? Perhaps most fundamentally, a person’s gender can often be inferred from just their first name. “Jane Fay” is almost certainly a woman, while her brother “John Fay” is almost certainly a man. A straightforward computer program can infer their respective genders with relative ease.
+As historians and other humanities researchers grapple with larger and larger datasets, they are increasingly using algorithms not just to extract information from existing data but to infer additional information from the data that is available.^[CITE: find example – network analysis, maybe http://kieranhealy.org/blog/archives/2013/06/09/using-metadata-to-find-paul-revere/] Datasets of interest to historians---for example membership lists, company payrolls, military rosters, passenger bookings, records of correspondence, and lists of published works---might included records with the names of individual people. Some datasets might contain associated information like a person's address, age, or rank. Other datasets contain little more than a personal name. Given large but sparse datasets, researchers have to use their ingenuity to derive additional kinds of information. What kind of information can researchers infer from just a name? Most obviously first names often imply a person's gender. "Jane Fay" is almost certainly a woman, while her brother "John Fay" is almost certainly a man. A straightforward computer program can infer their respective genders with relative ease.
  
-The problem arises from the fact that the link between gender and naming practices, like language itself, is not static. What about Jane and John Fay’s long-lost third sibling, Leslie? If Leslie was born in the past sixty years, chances are good that she would be their sister. But if the three siblings were born in the early twentieth century, chances are good that Leslie would be their brother. That is because the gendered naming convention surrounding “Leslie” had completely flipped over the course of one hundred years. 92% of the babies born in the United States in 1900 who were named “Leslie” were male, while 96% of those identically named babies born in the year 2000 were female. A similar pattern holds true for any number of American names: Madison, Morgan, Sydney, Kendall. The historical change in the prevailing gender of a name tends to follow set patterns. In general, names tend to shift from being predominantly male to being predominantly female; the shift almost never happens in the other direction. The reason that the shift tends to be from male to female depends on the cause of the shift. In general names that move from male to female are also shifting from being unpopular to popular names.For example the name Madison changed from male to female suddenly after the 1985 because the name became extremely popular for naming baby girls, whereas before it had been an infrequently used male name. In other words, since the late twentieth century US at any rate, girls are more likely than boys to be receive a trendy name, and once a trendy name is associated with females it is unlikely to be used for males. The few exceptions of names which go from being female to male, such as Jan, have a different causal mechanism: it seems likely that Jan as an English name is female but that Jan as a Scandinavian (Finnish? Swedish?) name is male. Because the name is relatively unpopular, changing patterns of immigration can explain the change.
+The problem arises from the fact that the link between gender and naming practices, like language itself, is not static. What about Jane and John Fay's sibling, Leslie? If Leslie was born in the past sixty years, chances are good that Leslie would be their sister. But if the three siblings were born in the early twentieth century, chances are good that Leslie would be their brother. That is because the gendered naming convention surrounding "Leslie" completely changed over the course of one hundred years. 92% of the babies born in the United States in 1900 who were named “Leslie” were male, while 96% of those identically named babies born in the year 2000 were female.
 
-[CITE: literature on baby names generally]
- 
-[GRAPHIC chart of changes in names – from README]
 
-[GRAPHIC showing change in popularity of names like Madison]
+```{r leslie}
+# We cannot simply use the Social Security figures (even though they probably
+# don't present a particular problem for the name Leslie) because later we will
+# argue that the gender ratios for the SSA figures before 1930 are skewed. So we
+# are going to splice the IPUMS data from before 1930 and the SSA data from
+# after 1930.
+
+ipums_leslie <- genderdata::ipums_usa %>%
+  filter(name == "leslie", year <= 1930) 
+
+ssa_leslie <- genderdata::ssa_national %>%
+  filter(name == "leslie", year > 1930)
+
+leslie_df <- rbind(ipums_leslie, ssa_leslie) %>%
+  mutate(prop_female = female / (female + male)) 
+  
+leslie_plot <- leslie_df %>% 
+  ggplot(aes(x = year, y = prop_female)) +
+  geom_smooth() + 
+  geom_point() +
+  ggtitle("Proportion of female uses of the name 'Leslie,' 1820-2012") +
+  xlab(NULL) + ylab(NULL) + ylim(0, 1) +
+  geom_hline(yintercept = 0.5) + 
+  annotate("text", x = 1900, y = 0.45, label = "Male") +
+  annotate("text", x = 1900, y = 0.55, label = "Female") 
+
+leslie_plot %>%
+  gg_attribution("Data: IPUMS USA; Social Security Administration") %>%
+  print()
+```
+
+Many other names as used in the United States, such as Madison, Morgan, Sydney, and Kendall, have also changed genders. Such changes in the prevailing gender of a name usually follow set patterns. In general, names tend to shift from being predominantly male to being predominantly female; the shift rarely happens in the other direction. In general, names that move from male to female also change from being unpopular to popular names. For example the name Madison changed from male to female suddenly after the 1985 because the name became extremely popular for naming baby girls, whereas before it had been an infrequently used male name. In other words, since the late twentieth century US at any rate, girls are more likely than boys to be receive a trendy name, and once a trendy name is associated with females it is unlikely to be used for males. The few exceptions of names which go from being female to male, such as Jan, have a different causal mechanism. It seems likely that Jan as an English name is female but that Jan as a Scandinavian name is male. Because the name has remained relatively uncommong, other causes besides changing gender preferences can explain the change.
 
 ```{r}
 plot_names <-  c("madison",
@@ -34,18 +67,26 @@ plot_names <-  c("madison",
                  "jan",
                  "sydney",
                  "morgan",
-                 "leslie")
+                 "leslie",
+                 "kendall")
 
-ssa_national %>%
+selected_names_plot <- ssa_national %>%
   filter(name %in% plot_names) %>%
-  mutate(proportion_female = female / (female + male)) %>%
-ggplot(aes(x = year, y = proportion_female, color = name)) +
-  geom_line() +
-  ggtitle("Changes in selected names")
+  mutate(prop_female = female / (female + male)) %>%
+ggplot(aes(x = year, y = prop_female, color = name)) +
+  geom_smooth(se = FALSE) +
+  ggtitle("Changes in selected names, 1930-2012") +
+  xlim(1930, 2012) + 
+  xlab(NULL) + ylab(NULL) + ylim(0, 1) +
+  geom_hline(yintercept = 0.5) +
+  annotate("text", x = 1965, y = 0.45, label = "Male") +
+  annotate("text", x = 1965, y = 0.55, label = "Female") 
 
+selected_names_plot %>%
+  gg_attribution("Data: Social Security Administration") %>%
+  print()
 ```
 
- 
 For researchers working on contemporary subjects the “Leslie” problem is not an especially pressing one. An education policy analyst studying the demographics of different urban school districts, for instance, can turn to a variety of tools that use current databases of names. (http://genderize.io/, http://genderchecker.com/about-us.aspx) These tools will most likely identify the gender of Leslie Fay correctly. But researchers studying historical subjects need to take into account the dynamic relationship between gender and naming practices. If that same researcher wanted to compare the demographics of contemporary urban schools with those from the early twentieth century, Leslie Fay’s gender would get misidentified. And the “Leslie” problem is not just one for historians studying the past. Anyone studying a longer timeframe will also encounter this problem: as of 2012, the average American has a lifespan of nearly seventy-nine years – more than enough time for naming practices to change quite dramatically. (cite World Bank).
  
 Our solution to the “Leslie” problem is to create a library that explicitly takes into account changes in naming practices. The program incorporates this temporal dimension using historical databases to more accurately infer whether “Leslie” was male or female depending on when he or she lived. It not only achieves better accuracy in inferring gender, but it also provides the relative likelihood of a person’s gender for a given range of years: 52% of the babies named “Leslie” born in 1950 were girls and 48% were boys.  Rather than a black box spitting out a stark FEMALE or MALE designation, the program computes a measurement for each gender’s relative “share” of a given name. This allows researchers to conduct more nuanced analysis and to determine for themselves what proportion is acceptable for making a prediction of male or female.
