@@ -1,20 +1,19 @@
 ---
-title: "Jane, John … Leslie? Algorithmic Gender Detection"
+title: "Jane, John … Leslie? A Historical Method for Algorithmic Gender Detection"
 author: "Cameron Blevins and Lincoln Mullen"
 output: html_document
 ---
 
-```{r}
+```{r, echo=FALSE, message=FALSE}
 library(genderdata)
 library(gender)
 library(dplyr)
 library(ggplot2)
 ```
 
- 
 ### Abstract
 
-This paper combines two trends in the humanities: the rise of gender as an analytical lens of inquiry and the proliferation of large, machine-readable datasets. It outlines a new method for algorithmically inferring the gender of a name by incorporating historical data to better reflect how naming practices change over time. This method ensures a higher level of accuracy with a precise statement of its reliability in inferring gender while tailoring it for humanistic study. Predicting gender from names requires a fundamentally historical method, which is demonstrated in this article. The article reports on the “gender” package for R which implements this method. The article demonstrates the method’s utility by applying it to a case study examining gender representation in the historical profession.
+This paper addresses two trends in the humanities: the rise of gender as an analytical tool and the proliferation of large, machine-readable datasets. It outlines a new method for algorithmically inferring the gender of a name from historical data in order to take into account how naming practices change over time and space. In contrast to existing methods of predicting gender, this method provides a higher level of accuracy and a precise statement of the likelihood that a name is a given gender. The article reports on the [Gender](https://github.com/ropensci/gender) package for the [R programming language](http://www.r-project.org/) which implements this method. The article demonstrates the method's utility by applying it to a case study in which we study gender in the history profession by inferring the gender of authors of history dissertations and of authors and reviewers in the *American Historical Review*.
 
 ### INTRODUCTION. The "Leslie" Problem
  
