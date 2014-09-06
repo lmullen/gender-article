@@ -7,5 +7,5 @@
 .Rdata
 .Rproj.user
 packrat/lib*/
-packrat/src/
 *.html
+packrat/src/

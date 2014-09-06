@@ -1,5 +1,5 @@
 PackratFormat: 1.4
-PackratVersion: 0.4.1
+PackratVersion: 0.4.1.1
 RVersion: 3.1.1
 Repos: CRAN=http://cran.r-project.org
 
@@ -18,11 +18,27 @@ Source: CRAN
 Version: 1.0-6
 Hash: cb26464a8321628636b547518994c931
 
+Package: caTools
+Source: CRAN
+Version: 1.17
+Hash: e350bf43b27772012b530ccdf2e34f4d
+Requires: bitops
+
+Package: colorspace
+Source: CRAN
+Version: 1.2-4
+Hash: b775bd08a10f968fef582304b7c3ab9c
+
 Package: devtools
 Source: CRAN
 Version: 1.5
 Hash: d8c2ffc3d991d1b1a8625919b8be3f4c
 Requires: digest, evaluate, httr, memoise, RCurl, whisker
+
+Package: dichromat
+Source: CRAN
+Version: 2.0-0
+Hash: 42be2136555fa4b6167605df56d8cd7c
 
 Package: digest
 Source: CRAN
@@ -50,7 +66,7 @@ Package: gender
 Source: github
 Version: 0.4.9002
 Hash: 4d022cab5134090256f396890f38a99b6da315ff
-Requires: jsonlite, httr, dplyr, genderdata
+Requires: dplyr, genderdata, httr, jsonlite
 GithubRepo: gender
 GithubUsername: ropensci
 GithubRef: develop
@@ -64,6 +80,17 @@ GithubRepo: gender-data-pkg
 GithubUsername: lmullen
 GithubRef: master
 GithubSha1: ba850f2c23f55d5d19acf6ccf0e180471636b6a1
+
+Package: ggplot2
+Source: CRAN
+Version: 1.0.0
+Hash: c8bff66238347472f08b6a35608539ff
+Requires: digest, gtable, MASS, plyr, proto, reshape2, scales
+
+Package: gtable
+Source: CRAN
+Version: 0.1.2
+Hash: 0cf4a2b54c02b35dec7e74a8ebed12a0
 
 Package: hflights
 Source: CRAN
@@ -83,20 +110,25 @@ Requires: digest
 
 Package: httr
 Source: CRAN
-Version: 0.4
-Hash: 0fe56eff828423386ce2f71e055572a3
-Requires: digest, jsonlite, stringr, RCurl
+Version: 0.5
+Hash: 68a70bdd16fb949a12e4fda7f31def00
+Requires: digest, jsonlite, RCurl, stringr
 
 Package: jsonlite
 Source: CRAN
-Version: 0.9.10
-Hash: 6e69e79691b668042c7f022bb680bba5
+Version: 0.9.11
+Hash: 9eda817b04b4253e3dc1ba685b0bd612
 
 Package: knitr
 Source: CRAN
 Version: 1.6
 Hash: 0f6457facba94bccad17a7c67c2f4168
-Requires: digest, stringr, evaluate, formatR, highr, markdown
+Requires: digest, evaluate, formatR, highr, markdown, stringr
+
+Package: labeling
+Source: CRAN
+Version: 0.3
+Hash: 568a992912caf7eeddfb121924154047
 
 Package: Lahman
 Source: CRAN
@@ -114,6 +146,11 @@ Version: 0.7.4
 Hash: 01d7f71ed6e3d9b1c17ba51cff91be72
 Requires: mime
 
+Package: MASS
+Source: CRAN
+Version: 7.3-34
+Hash: 9730a45e523e39a8e7f96d6455685436
+
 Package: memoise
 Source: CRAN
 Version: 0.2.1
@@ -125,14 +162,32 @@ Source: CRAN
 Version: 0.1.2
 Hash: 08ae994b18677717b786ade9c113b6ea
 
+Package: munsell
+Source: CRAN
+Version: 0.4.2
+Hash: fa8af6d040041439b249351e9d16ae9a
+Requires: colorspace
+
 Package: packrat
-Source: github
-Version: 0.4.0.5
-Hash: 76abbefacf6fda8859f3bb3ac0ab63ca92384829
-GithubRepo: packrat
-GithubUsername: rstudio
-GithubRef: master
-GithubSha1: 76abbefacf6fda8859f3bb3ac0ab63ca92384829
+Source: CRAN
+Version: 0.4.1-1
+Hash: 5716097644904b9c1b4be2692de16005
+
+Package: plyr
+Source: CRAN
+Version: 1.8.1
+Hash: be21bad411e628f810a92212e17b5be7
+Requires: Rcpp
+
+Package: proto
+Source: CRAN
+Version: 0.3-10
+Hash: 668a9e87cedbdc5f56c396edf1bd2648
+
+Package: RColorBrewer
+Source: CRAN
+Version: 1.0-5
+Hash: 6a849b729bec970204ca88b96906adbc
 
 Package: Rcpp
 Source: CRAN
@@ -145,15 +200,27 @@ Version: 1.95-4.3
 Hash: 158377109f939084a72f240125f821d3
 Requires: bitops
 
+Package: reshape2
+Source: CRAN
+Version: 1.4
+Hash: b210925e978fd52ad5eb0822a353e7ce
+Requires: plyr, Rcpp, stringr
+
 Package: rmarkdown
 Source: github
-Version: 0.2.54
-Hash: c62a723734dbb0c93b5d773cb4c4dfde78309ec0
-Requires: htmltools, knitr, yaml
+Version: 0.2.68
+Hash: d2474565b72d39ed83b32d3c92a2bb02f8ed03a5
+Requires: caTools, htmltools, knitr, yaml
 GithubRepo: rmarkdown
 GithubUsername: rstudio
 GithubRef: master
-GithubSha1: c62a723734dbb0c93b5d773cb4c4dfde78309ec0
+GithubSha1: d2474565b72d39ed83b32d3c92a2bb02f8ed03a5
+
+Package: scales
+Source: CRAN
+Version: 0.2.4
+Hash: b8b1af97bd07818605223060386b00dd
+Requires: dichromat, labeling, munsell, plyr, RColorBrewer
 
 Package: stringr
 Source: CRAN
