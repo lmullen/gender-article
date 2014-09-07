@@ -101,7 +101,7 @@ We recognize that gender is a fluid concept, both today and in the past, and tha
  
 The remainder of this article is divided into two sections. First, we describe our method in more detail, compare it to existing methods, and explain how to use the method. Second, we apply the method to a case study of the historical profession in order to demonstrate the usefulness of the method.
  
-PART I. The Method
+### I. The Method
  
 Existing Methods:
 
@@ -220,10 +220,9 @@ On the methodological front, perhaps the program’s most glaring limitation is 
 Our program uses source data that only goes back as far as 1880, making it a far more effective method for twentieth-century analysis. Additionally, our program is not as effective at identifying highly uncommon names. The annual reference data it uses from the Social Security Administration only includes baby names that occurred at least five times in a given year. If a name was never given to five or more babies over the course of any year from 1880 to the present, our program will not be able to infer its gender. [more details – see below?]
 [- SSA restricts its data to only names with at least 5 occurrences (we’re still missing a bit of the long tail). Not a big problem because we still have more names, and more obscure names, than any other data set. More of a problem when localizing to the state, which starts in 1910 (double check) and because it includes only >5 occurrences in much smaller jurisdictions, more of the long tail is cut off.]
  
-PART II. Measuring Gatekeeping in the Historical Profession
+### II. Measuring Gatekeeping in the Historical Profession
  
 In a 2005 report for the American Historical Association, Elizabeth Lunbeck acknowledged “a sea change in the [historical] profession with respect to gender” before going on to describe the painful limitations of this sea change for female historians: ongoing personal discrimination, lower salaries, and barriers to securing high-ranking positions. Lunbeck’s report drew in part on a survey of 362 female historians that produced a rich source of responses detailing the deep and multi-faceted challenges facing women in the profession. What follows is a quantitative supplement to Lunbeck’s analysis that uses our program to analyze gender representation amongst historians across a much larger scale and a much longer time period. http://www.historians.org/Documents/About%20AHA%20and%20Membership/CWH-Report_5.20.05.pdf
- 
  
 Our analysis focuses on one of the bedrocks of the historical profession: scholarly research. We begin with the history dissertation, often the defining scholarly output of a historian’s early career. The completion of a dissertation marks a standardized moment of transition out of the “training” phase of the historical profession. Data supplied by ProQuest provided roughly [80,000] PhD(?) dissertations completed since [1950]. Identifying the gender of their authors gives a sense for the number of women and men who are completing PhD-level training in history each year. Our program uses what year a historian wrote their dissertation to estimate a period for when they might have been born: a historian who completed their dissertation in 1980 was likely born between ____ and _____. Using this temporal information, we are better able to infer their gender and chart how the larger representation of women and men changes year-by-year. 
  
@@ -258,7 +257,7 @@ The American Historical Association also categorizes their reviews under differe
  
 One 2013 analysis of 2,500 recent history Ph.D.’s found that “gender played little role in employment patterns across particular professions and industries.” (http://historians.org/Documents/Many_Careers_of_History_PhDs_Final.pdf) Our own analysis reveals a more complicated reality. The flagship journal of professional historians continues to publish twice as many reviews of books by female authors as male authors. This disparity is put into even sharper relief when set against the relative parity achieved by women in producing history dissertations. Women might be getting hired at comparable rates to men, but discriminatory gatekeeping remains alive and well in the historical profession. Our program allows us to quantitatively measure the scope of the problem on a large scale, how it’s changed over time, and what remains to be done.
  
-Conclusion
+### Conclusion
  
 Our contributions:
 
@@ -266,17 +265,9 @@ Our contributions:
 -   	Temporal dimension makes it better suited to fit the needs of humanities research than contemporary approaches – both more accurate (historical) and more nuanced (supplying the gendered proportion of a name for different periods)
 -   	Extensible – non US-names, older names. (future work)
  
- 
- 
- 
 The fundamental points are that we have a much larger corpus of names. More importantly the ability to vary the look up based on a specific date of birth or a specified range of dates. Making this much more useful for historians, but also for any research in any field, given that the normal human lifespan present in any data set means that names can vary as much as a century, and so everyone needs to be using a fundamentally historical method. (Take that, sociologists.)
- 
  
 Future work:
  
 Both the Python script and the R package are easily extensible to allow additional data sets, say from other countries. (Are there other data sets, say for Great Britain, http://data.gov.uk/data/search?q=names ??) And eventually perhaps US census data, which would solve the 19th century problem.
- 
-Works Cited:
- 
- 
  
