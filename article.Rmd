@@ -11,9 +11,16 @@ library(dplyr)
 library(ggplot2)
 library(mullenMisc)
 library(knitr)
+library(scales)
 
 # TRUE to show code and warnings; FALSE to remove them for publication
 display_code_blocks(FALSE)
+
+# Add a thousands separator
+knit_hooks$set(inline = function(x) {
+  prettyNum(x, big.mark=",")
+})
+
 ```
 
 ### Abstract
@@ -60,7 +67,7 @@ leslie_plot %>%
 
 Many other names as used in the United States, such as Madison, Morgan, Sydney, and Kendall, have also changed genders. Such changes in the prevailing gender of a name usually follow set patterns. In general, names tend to shift from being predominantly male to being predominantly female; the shift rarely happens in the other direction. In general, names that move from male to female also change from being unpopular to popular names. For example the name Madison changed from male to female suddenly after the 1985 because the name became extremely popular for naming baby girls, whereas before it had been an infrequently used male name. In other words, since the late twentieth century US at any rate, girls are more likely than boys to be receive a trendy name, and once a trendy name is associated with females it is unlikely to be used for males. The few exceptions of names which go from being female to male, such as Jan, have a different causal mechanism. It seems likely that Jan as an English name is female but that Jan as a Scandinavian name is male. Because the name has remained relatively uncommong, other causes besides changing gender preferences can explain the change.
 
-```{r}
+```{r plot_names_that_change}
 plot_names <-  c("madison",
                  "keanu",
                  "addison",
@@ -102,34 +109,61 @@ We recognize that gender is a fluid concept, both today and in the past, and tha
 The remainder of this article is divided into two sections. First, we describe our method in more detail, compare it to existing methods, and explain how to use the method. Second, we apply the method to a case study of the historical profession in order to demonstrate the usefulness of the method.
  
 ### I. The Method
- 
-Existing Methods:
 
-The historical method to be described below may be compared to a method available in the Natural Language Toolkit for Python. The NLTK provides many tools for analyzing natural language, including two lists of male and female names created by Mark Kantrowitz with assistance from Bill Ross. This list includes 7579 [DOUBLE CHECK] unique names. Using the Kantrowitz names corpus in NLTK, one could look up a name like Jane or John and find out that it is male or female. [NOTE: The Kantrowitz corpus is also implemented in the gender package for R for comparison, though its use is not recommended for actual research.]
+```{r calc_unique_names}
+# Numbers of unique names in different data sets, for reference below
+unique_names <- function(dataset) {
+  dataset$name %>% unique %>% length
+  }
+  
+kantrowitz_unique <- unique_names(genderdata::kantrowitz)
+ssa_unique <- unique_names(genderdata::ssa_national)
+ipums_unique <- unique_names(genderdata::ipums_usa)
+```
 
-[SAMPLE OUTPUT in Python from NLTK names corpus converted to an array of tuples.]
+Our historical method for inferring gender from names may be compared to a method available in the [Natural Language Toolkit](http://www.nltk.org/) for Python.^[Steven Bird, Edward Loper, and Ewan Klein, *Natural Language Processing with Python* (O’Reilly, 2009), ch. 2. Chapter 6 of the NLTK book also describes a method of predicting gender from the last letter of the name, but this example is given for the sake of explaining supervised classification and not as an end in itself, so we do not have reason to address this ahistorical method.] The NLTK is an influential software package for scholarship because it provides an extraordinary range of tools for analyzing natural language. Included in the NLTK are two lists of male and female names created by the computer scientist Mark Kantrowitz with assistance from Bill Ross.^[The [original lists of names](http://www.cs.cmu.edu/afs/cs/project/ai-repository/ai/areas/nlp/corpora/names/0.html) are available at the website of the computer science department at Carnegie Mellon University, and the NLTK implementation is described in its [documentation](http://www.nltk.org/howto/corpus.html).] These lists include `r kantrowitz_unique` unique names. Using the Kantrowitz names corpus in the NLTK, one could look up a name like Jane or John and find out that it is male or female. The Kantrowitz corpuse provides the list of names.^[The examples below is drawn from our Gender package which implements the Kantrowitz dataset for comparsion's sake, though its use is not recommended for actual research. The Gender package combines the Kantrowitz corpus's two lists into a single list, identifying names that are ambiguous because they appear on both lists as `"either"`.] 
 
-[('Aaron', 'male'), 
-('Abbey', 'male'), 
-('Abbie', 'male'), 
-('Abbot', 'male')
-('Zorine', 'female'), 
-('Zsa Zsa', 'female'), 
-('Zsazsa', 'female'), 
-('Zulema', 'female'), 
-('Zuzana', 'female')]
+```{r kantrowitz list, echo=TRUE, results='markup'}
+genderdata::kantrowitz
+```
 
-[CITE: Link to original name corpus: http://www.cs.cmu.edu/afs/cs/project/ai-repository/ai/areas/nlp/corpora/names/0.html]
+One can then easily write a function which looks up the gender of a given name.
 
-The most significant problem with the Kantrowitz names corpus and thus the NLTK implementation is that it assumes that names are timeless. As pointed out above, this makes the corpus unusable for historical purposes. Furthermore the corpus includes some oddities which make it less suitable. Some names like “Bill” are overwhelmingly male, but the corpus includes them as both male and female. And because the Kantrowitz corpus contains only 7,579 (a mere 8.2% of the 91,320 names released by the Social Security Administration for the US alone) there are many names that it cannot identify. [NOTE: The SSA data includes only names used more than 5 times in a given year, so the “long tail” of actual number of names in the US is considerably larger. Link to SSA data.] In this chart, for example, the “unidentified” category grows rapidly after 1965. While our Social Security method relies primarily on children born in the US but also people who become naturalized citizens (double check) whereas as census data for example also includes immigrants, nevertheless it does far better at identifying non-European names since it contains over an order of magnitude more names.
- 
+```{r abby-kantrowitz, echo=TRUE, results='markup'}
+gender("abby", method = "kantrowitz")
+```
 
- 
-[CITE existing literature on gender classification]
+```{r compare-kantrowitz-ssa, cache=TRUE, eval=FALSE}
+# Calculate the error rate of the Kantrowitz data set. This code is very slow, 
+# so I have disabled evaluating and hardcoded the value into the text for now.
+# We can re-run this for the final version of the article.
+cf_kantrowitz_ssa <- data.frame(name = unique(genderdata::kantrowitz$name),
+                                stringsAsFactors = "FALSE")
 
-We mention the Kantrowitz name corpus as implemented in NLTK because the Natural Language Toolkit is rightly regarded as influential for scholarship. It’s flaws are also emblematic of the problems with most other implementations of gender prediction algorithms. The Genderize website and API is, for example, a much more sophisticated implementation of a gender prediction. Besides predicting male or female for gender, it also reports the proportion of male or female names, along with a count of the number of uses of the name that it is basing its prediction on. Genderize will also permit the user to customization a prediction for different countries: an extremely important feature. Genderize includes “database contains 142848 distinct names across 77 countries and 85 languages.” Genderize is unsuitable for historical work, however, because it is based only on contemporary data. According to the documentation for its API, “It utilizes big datasets of information, from user profiles across major social networks.” [SOURCE: http://genderize.io] It would be anachronistic to apply these datasets to the past, and Genderize provides no functionality to filter results chronologically as it does geographically. [NOTE: A wrapper to the genderize API is included in the gender package. There are also wrappers available in Ruby and Python. There are a number of other website which provide similar functionality based on apparently similar datasets, none of which permit historical variation.)
- 
-Surprisingly, CRAN does not include any packages for doing this in R, though some packages do include functions for this. Python has no existing package (double check) besides the NLTK and Genderize.Thus the two of the most commonly used languages for data analysis, particularly within the digital humanities community, have no satisfactory package that could easily solve the problem of discovering the gender of names, though options for geocoding, for example, abound.
+# For just the names in the Kantrowitz corpus, predict the gender with both the Kantrowitz and the SSA method.
+cf_kantrowitz_ssa <- cf_kantrowitz_ssa %>%
+  group_by(name) %>%
+  do(kantrowitz = gender(name = .$name, method = "kantrowitz")$gender,
+     ssa = gender(name = .$name, method = "ssa")$gender)
+
+cf_results <- as.character(cf_kantrowitz_ssa$kantrowitz) ==
+  as.character(cf_kantrowitz_ssa$ssa)
+
+# Error rate is the number of mismatches to the total number of names
+kantrowitz_error_rate <- 1 -(sum(cf_results) / length(cf_results))
+```
+
+```{r}
+# Hardcode the error rate for now. This value is based on running the code above
+# locally.
+kantrowitz_error_rate <- 0
+```
+
+The most significant problem with the Kantrowitz names corpus and thus the NLTK implementation is that it assumes that names are timeless. As pointed out above, this makes the corpus unusable for historical purposes. Furthermore the corpus includes some oddities which make it less than suitable. Some names like Abby are overwhelmingly female and some like Bill are overwhelmingly male, but the corpus includes them as both male and female. The Kantrowitz corpus contains only `r kantrowitz_unique`, a mere `r percent(kantrowitz_unique / ssa_unique)` of the `r ssa_unique` names in the Social Security Administration dataset and `r percent(kantrowitz_unique / ipums_unique)` of the `r ipums_unique` names in the census records provided by IPUMS USA. There are therefore many names that it cannot identify. Assuming for the moment that our method provides more accurate results, we estimate that `r percent(kantrowitz_error_rate)` percent of the names in the Kantrowitz corpuse are misclassified or classified as ambigious when a prediction could be made.
+
+We mention the Kantrowitz name corpus as implemented in NLTK because the Natural Language Toolkit is rightly regarded as influential for scholarship. Its flaws are also typical of the problems with most other implementations of gender prediction algorithms. The Genderize.io API is, for example, a more sophisticated implementation of gender prediction than the NLTK algorithm. Besides predicting male or female for gender, it also reports the proportion of male or female names, along with a count of the number of uses of the name that it is basing its prediction on. Genderize will also permit the user to customization a prediction for different countries: an extremely important feature. Genderize.io reports that its "database contains 142848 distinct names across 77 countries and 85 languages." Genderize is unsuitable for historical work, however, because it is based only on contemporary data. According to the documentation for its API, "It utilizes big datasets of information, from user profiles across major social networks."^[Quotations are taken from the [Genderize.io website](http://genderize.io), with correspondence from the developer behind the site for confirmation.] It would be anachronistic to apply these datasets to the past, and Genderize.io provides no functionality to filter results chronologically as it does geographically. In addition, exactly what the dataset comprises and how it was gathered is unclear, which keeps scholars from interrogating the value of the source.
+
+R and Python are the most commonly used languages for data analysis among digital humanists. Python's existing packages for gender prediction all implement a method similar to the NLTK or Genderize.io.^[Python library names] To our knowledge, [CRAN](http://cran.rstudio.com/) (the central repository for R packages) does not include any packages dedicated to gender prediction. Though options abound for geocoding, for example, there is no satisfactory existing method of gender prediction for historical and humanistic research.
  
 The Solution:
 
@@ -271,3 +305,9 @@ Future work:
  
 Both the Python script and the R package are easily extensible to allow additional data sets, say from other countries. (Are there other data sets, say for Great Britain, http://data.gov.uk/data/search?q=names ??) And eventually perhaps US census data, which would solve the 19th century problem.
  
+
+----
+
+Things cut to be moved to more suitable places:
+
+[NOTE: The SSA data includes only names used more than 5 times in a given year, so the "long tail" of actual number of names in the US is considerably larger. Link to SSA data.]

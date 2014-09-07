@@ -9,3 +9,5 @@
 packrat/lib*/
 *.html
 packrat/src/
+article_cache
+article_files
