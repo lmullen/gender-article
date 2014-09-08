@@ -277,10 +277,3 @@ The fundamental points are that we have a much larger corpus of names. More impo
 Future work:
  
 Both the Python script and the R package are easily extensible to allow additional data sets, say from other countries. (Are there other data sets, say for Great Britain, http://data.gov.uk/data/search?q=names ??) And eventually perhaps US census data, which would solve the 19th century problem.
- 
-
-----
-
-Things cut to be moved to more suitable places:
-
-[NOTE: The SSA data includes only names used more than 5 times in a given year, so the "long tail" of actual number of names in the US is considerably larger. Link to SSA data.]
