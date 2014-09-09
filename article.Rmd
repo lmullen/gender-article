@@ -188,9 +188,46 @@ genderdata::ssa_national
 genderdata::ipums_usa
 ```
 
-Our method for predicting gender is best understood through a series of examples. First we will demonstrate a simplified version of the inner workings of the function for predicting a single name. This example will demonstrate fundamentally how the function works. Next we will demonstrate how to use the function provided in the gender package to solve a simple historical problem. 
+Our method for predicting gender is best understood through a series of examples. First we will demonstrate a simplified version of the inner workings of the function for predicting a single name. This example will demonstrate fundamentally how the function works. Next we will demonstrate how to use the function provided in the gender package to predict gender from a small sample dataset.
 
- 
+The method for predicting gender from a name using the provided datasets is fundamentally simple. Let's begin by assuming that using the Social Security dataset we want to predict the gender of someone named Sidney who was born in 1935. Because the dataset contains a list of names for each year, we can simply lookup the row for Sidney in 1935. Using the [dplyr](https://github.com/hadley/dplyr) package for R, this can be expressed in a simple grammar of filtering by name and year.
+
+```{r, echo=TRUE, results='markup'}
+genderdata::ssa_national %>%
+  filter(name == "sidney", year == 1935)
+```
+
+Thus according to the Social Security Administration, there were 974 boys and 93 females named Sidney born in 1935. We can add another command to calculate the proportion of females and males ("mutate" in dplyr's parlance).
+
+```{r, echo=TRUE, results='markup'}
+genderdata::ssa_national %>%
+  filter(name == "sidney", year == 1935) %>%
+  mutate(proportion_female = female / (male + female),
+         proportion_male   = 1 - proportion_female)
+```
+
+In other words, there is an approximately `r gender("sidney", year = 1935)$proportion_male %>% percent()` percent chance that a person born in 1935 named Sidney was male. (In 2012, for comparison, there was an approximately `r gender("sidney", year = 2012)$proportion_female %>% percent()` percent chance that a person born named Sidney was female.)
+
+The method is only slightly more complex if we do not know the exact year when someone was born, as is often the case for historical data. Suppose we know that Sidney was born in the 1930s but cannot identify the exact year of his or her birth. Using the same method as above we can look up the name for all of those years.
+
+```{r, echo=TRUE, results='markup'}
+genderdata::ssa_national %>%
+  filter(name == "sidney", year >= 1930 & year <= 1939) 
+```
+
+Next we can sum up the male and female columns ("summarize" in dplyr's vocabulary) and calculate the proportions of female and male uses.
+
+```{r, echo=TRUE, results='markup'}
+genderdata::ssa_national %>%
+  filter(name == "sidney", year >= 1930 & year <= 1939) %>%
+  group_by(name) %>%
+  summarize(female = sum(female),
+            male = sum(male)) %>%
+  mutate(proportion_female = female / (male + female),
+         proportion_male   = 1 - proportion_female)
+```
+
+In other words, for the decade of the 1930s, we can calculate that there is a `r gender("sidney", year = c(1930, 1939))$proportion_male %>% percent()` percent chance tha person named Sidney was male. This is roughly the same as the probability that the name was male in just 1935, but by looking at the underlying counts on which it is based, we can see this proportion was calculated from ten years instead of one.
  
 Limitations:
  
