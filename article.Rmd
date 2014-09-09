@@ -188,53 +188,11 @@ genderdata::ssa_national
 genderdata::ipums_usa
 ```
 
- 
-Our program is best understood through an example. Let’s say a historian is working with records from a public school system and wants to know what percentage of its total student body each year was male or female. This historian can tell the program the approximate age range of its target population - in this case, ages 4 to 18. Our program then iterates through all of the names attempting to identify their gender based on a) the date of the data, and b) the age range specified by the user. Sidney Dubner, for instance, was enrolled as a student in the year 1918. Given the age range of 4 to 18 specified by the user, the program guesses that Sidney Dubner was born between 1900 and 1914. It then looks up every birth of a child named “Sidney” recorded by the Social Security Administration between 1900 and 1914 and calculates that 94.7% of these babies named “Sidney” were male. Chances are good that this was a male student. But what if the year was 1998 instead of 1918? The chances that “Sidney” was a boy falls to 66.4%. Fast-forward another ten years to 2008, and suddenly it’s more likely that “Sidney” is in fact a girl, not a boy (69.3% female to 30.7% male).
- 
-Reference Implementations/Software:
- 
-Description of Lincoln’s R package [link].
- 
-Implements both the Kantrowitz method and this new method. Extensible through the addition of additional data sets as they become available.
-Includes cleaned up, tidied (in the Hadley Wickham sense) versions the Kantrowitz data sets and the SSA national and state data. (Link to gender repo.) These allow researchers to load the package and use the data directly, in addition to accessing through methods. Furthermore
-Allows for encoding of individual names by year, of data sets where each name is associated with a year, and data sets where there are names of years and a range of years is provided. Eventually will include ability to specify by
-Samples of code:
- 
-find_gender(“madison”) # returns “female” and probability
-find_gender(“madison”, 1990) # returns “female” and probability
-find_gender(“madison”, 1890) # returns “male” and probability
- 
-year  name     
-------  ---------
- 1890  john     
- 1990  john     
- 1990  john     
- 1890  jane     
- 1990  jane     
- 1890  madison  
- 2012  madison
-For data sets where there is no year available, you can specify the range.
-find_gender(test_data, years = c(1880, 1940)) # returns male, male, male, male, female, female
- 
-For data sets where there is a year available, say a year of birth, then you can specify the column that stores that data, and each person will be looked up individually.
-find_gender(test_data, year_column = T) # returns male, female, male, male, female, female
- 
-In cases where the data set includes non-birth date, and because those dates vary significantly, one wishes to operate on the basis of date, one is advised to split up the data into cohorts, apply the gender checking methods, then recombine the split up data sets. (This is akin to Wickhams Split Apply Combine method: citation to article.) In this example of the dissertations data sets, I have split the data set into people whose dissertations were before 1950 and those who were after. (In actual practice, I would use more fine grained cohorts, and a more sophisticated method for splitting and applying, such as the `ddply` command in `plyr`.)
- 
-library(dplyr)
-dissertations_before_1950 <- dissertations %.%
- filter(year < 1950)
-dissertations_after_1950 <- dissertations %.%
- filter(year >= 1950)
-dissertations_before_1950 <- dissertations_before_1950 %.%
- find_gender(years = c(1880,1940)) # reasonable guess as to ages
-dissertations_after_1950 <- dissertations_after_1950 %.%
- find_gender(years = c(1930,1990)) # reasonable guess as to ages
-dissertations_combined < rbind(dissertations_before_1950, dissertations_after_1950)
+Our method for predicting gender is best understood through a series of examples. First we will demonstrate a simplified version of the inner workings of the function for predicting a single name. This example will demonstrate fundamentally how the function works. Next we will demonstrate how to use the function provided in the gender package to solve a simple historical problem. 
+
  
  
 Limitations:
- 
  
 On the methodological front, perhaps the program’s most glaring limitation is its weakness in inferring the gender of non-American names. Once again, this is a reflection of where the source data originated: U.S. government agencies. More recent datasets exist for non-American names, but we have been unable to find or incorporate information on how these names have changed over time. The program is extensible, however, meaning that if someone does locate a suitably temporal dataset of non-American names they can implement it into our program.
  
