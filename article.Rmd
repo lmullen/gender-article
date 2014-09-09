@@ -228,7 +228,23 @@ genderdata::ssa_national %>%
 ```
 
 In other words, for the decade of the 1930s, we can calculate that there is a `r gender("sidney", year = c(1930, 1939))$proportion_male %>% percent()` percent chance tha person named Sidney was male. This is roughly the same as the probability that the name was male in just 1935, but by looking at the underlying counts on which it is based, we can see this proportion was calculated from ten years instead of one.
- 
+
+As previously mentioned, the history of how the Social Security Administration collected the data effects its validity. Specifically, because the data extends back to 1880 but the first applications were gathered after 1935, the sex ratios in the dataset are skewed, as demonstrated in this plot.
+
+```{r}
+genderdata::ssa_national %>%
+  group_by(year) %>%
+  summarize(ratio = sum(female) /sum(female + male)) %>%
+  ggplot(aes(x = year, y = ratio)) +
+  geom_line() +
+  ggtitle("Percentage of SSA dataset that is female") +
+  xlab(NULL) + ylab(NULL)
+```
+
+It is extremely improbable that nearly 70 percent of the people born in 1900 were female. Exactly why the dataset has this bias is unclear, though we speculate that it is because the applicants for Social Security in the early years of the program were approaching retirement age, which was set much closer to the average life expectancy in 1935 than it is today. Since women tend to live longer than men, they were overrepresented in Social Security applications.
+
+The solution to this problem is two-fold. First, we recommend that researchers use the IPUMS-USA dataset to make predictions for years from 1790 to 1930 (which avoids the "bubble" in the SSA data) and that they use the SSA dataset for years since 1930.^[The IPUMS-USA dataset includes only apparently random fluctuations in the gender ratio in any given year.] Second, we have built in a correction to the SSA dataset when using the `gender()` function. If we assume that the secondary sex ratio (that is, the ratio of male to female births) in any given year does not deviate from `0.5` (that is, equality), it is possible to calculate a correction factor for each year or range of years to even out the dataset. We apply this correction factor automatically when using the SSA dataset.
+
 Limitations:
  
 On the methodological front, perhaps the program’s most glaring limitation is its weakness in inferring the gender of non-American names. Once again, this is a reflection of where the source data originated: U.S. government agencies. More recent datasets exist for non-American names, but we have been unable to find or incorporate information on how these names have changed over time. The program is extensible, however, meaning that if someone does locate a suitably temporal dataset of non-American names they can implement it into our program.
