@@ -197,7 +197,7 @@ genderdata::ssa_national %>%
   filter(name == "sidney", year == 1935)
 ```
 
-Thus according to the Social Security Administration, there were 974 boys and 93 females named Sidney born in 1935. We can add another command to calculate the proportion of females and males ("mutate" in dplyr's parlance).
+Thus according to the Social Security Administration, there were 974 boys and 93 females named Sidney born in 1935. We can add another command to calculate the proportion of females and males ("mutate" in dplyr's vocabulary).
 
 ```{r, echo=TRUE, results='markup'}
 genderdata::ssa_national %>%
@@ -245,12 +245,33 @@ It is extremely improbable that nearly 70 percent of the people born in 1900 wer
 
 The solution to this problem is two-fold. First, we recommend that researchers use the IPUMS-USA dataset to make predictions for years from 1790 to 1930 (which avoids the "bubble" in the SSA data) and that they use the SSA dataset for years since 1930.^[The IPUMS-USA dataset includes only apparently random fluctuations in the gender ratio in any given year.] Second, we have built in a correction to the SSA dataset when using the `gender()` function. If we assume that the secondary sex ratio (that is, the ratio of male to female births) in any given year does not deviate from `0.5` (that is, equality), it is possible to calculate a correction factor for each year or range of years to even out the dataset. We apply this correction factor automatically when using the SSA dataset.
 
-Limitations:
- 
-On the methodological front, perhaps the program’s most glaring limitation is its weakness in inferring the gender of non-American names. Once again, this is a reflection of where the source data originated: U.S. government agencies. More recent datasets exist for non-American names, but we have been unable to find or incorporate information on how these names have changed over time. The program is extensible, however, meaning that if someone does locate a suitably temporal dataset of non-American names they can implement it into our program.
- 
-Our program uses source data that only goes back as far as 1880, making it a far more effective method for twentieth-century analysis. Additionally, our program is not as effective at identifying highly uncommon names. The annual reference data it uses from the Social Security Administration only includes baby names that occurred at least five times in a given year. If a name was never given to five or more babies over the course of any year from 1880 to the present, our program will not be able to infer its gender. [more details – see below?]
-[- SSA restricts its data to only names with at least 5 occurrences (we’re still missing a bit of the long tail). Not a big problem because we still have more names, and more obscure names, than any other data set. More of a problem when localizing to the state, which starts in 1910 (double check) and because it includes only >5 occurrences in much smaller jurisdictions, more of the long tail is cut off.]
+These internal workings are wrapped by the prediction function so that researchers can focus on the choice of datasets and the range of years for making their predictions. Let's use the following sample dataset, say, a membership role, as an example for how to use the function.^[See the package vignette for more details: `vignette("predicting-gender", package = "gender")`.]
+
+```{r}
+membership <- data.frame(name = c("Madison", "Madison", "Morgan",
+                                  "Morgan", "Jan", "Jan"),
+                         birth_year = c(1934, 1990, 1948, 1970, 1965, 1998),
+                         stringsAsFactors = FALSE) %>% tbl_df()
+```
+
+```{r, echo=TRUE, results='markup'}
+membership
+```
+
+The simplest way to use the package would be to call the `gender()` function, specifying the method, in this case the Social Security Administration dataset since all the names are after 1930, and convert the results to a data frame (one of R's native data structures).
+
+```{r, echo=TRUE, results='markup'}
+gender(membership$name, method = "ssa") %>% do.call(rbind.data.frame, .)
+```
+
+This most basic call would be suitable if we did not know the year of birth. But we can also specify that in the `gender()` function by using this call:
+
+```{r, echo=TRUE, results='markup'}
+Map(gender, membership$name, years = membership$birth_year) %>% 
+  do.call(rbind.data.frame, .)
+```
+
+By taking into account the year of birth, we find that four of our six names were likely male, whereas we might otherwise have predicted that all six were female. We also now know the approximate likelyhood that our predictions are correct: at least 80% for all of thse predictions.
  
 ### II. Measuring Gatekeeping in the Historical Profession
  
