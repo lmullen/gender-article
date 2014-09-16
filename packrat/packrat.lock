@@ -241,6 +241,12 @@ Source: CRAN
 Version: 0.6.2
 Hash: cdde0cfa0f52cffeaca23a11a3899779
 
+Package: tidyr
+Source: CRAN
+Version: 0.1
+Hash: 670914c4cc556ce437637448b4b3e8b0
+Requires: dplyr, reshape2
+
 Package: whisker
 Source: CRAN
 Version: 0.3-2
