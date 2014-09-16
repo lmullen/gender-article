@@ -3,10 +3,20 @@
 library(dplyr)
 library(stringr)
 
+extract_first_name_from_diss <- function(name) {
+  name %>%
+    tolower() %>%
+    str_extract(", [a-z'-]{2,}") %>%
+    str_extract("[a-z'-]{2,}") %>%
+    str_trim()
+}
+
 # The dissertations data has already been cleaned.
 # See https://github.com/lmullen/dissertations-data
+# But it needs a new column for the author first name.
 diss <- read.csv("data/h_diss2.csv", stringsAsFactors = FALSE) %>%
-  tbl_df()
+  tbl_df() %>%
+  mutate(author_first_name = extract_first_name_from_diss(author))
 
 # The AHR data has been converted to UTF8. For some entries the first name
 # column contains first and middle names, so we're going to parse out just the
