@@ -102,9 +102,9 @@ gender("Leslie", method = "genderize")
 
 But researchers studying a longer timespan need to take into account the changing nature of naming practices. If that same education researcher wanted to compare the demographics of contemporary urban schools with those from the early twentieth century, contemporary tools like Genderize.io would misidentify Leslie Fay's gender in historical datasets. The "Leslie" problem is not just for researchers who think of themselves as historians. Anyone studying a period longer than a few years, or anyone studying a group whose demographics do not match those of a contemporary tool like Genderize.io will also encounter this problem. As of 2012, the average American has a lifespan of nearly seventy-nine years–--more than enough time for naming practices to change quite dramatically between their birth and death \[World Bank 2014]\. Predicting gender from first names therefore requires a fundamentally historical method.
  
-Our solution to the "Leslie" problem is to create a software package that combines a predictive algorithm with several historical datasets suitable to various times and regions. The algorithm calculates the proportion of male or female uses of a name in a given birth year or range of years. It thus can provide not only a prediction of the gender of a name, but also a measure of that prediction's likelihood. For example, our program predicts that a person named Leslie born in 1950 is female, but only just barely: 52 percent of the babies named Leslie born in the United States in 1950 were girls and 48 percent were boys. Including these proportion figures allows researchers to conduct more nuanced analysis and to determine for themselves what proportion is acceptable predicting the gender of names.
+Our solution to the "Leslie" problem is to create a software package that combines a predictive algorithm with several historical datasets suitable to various times and regions. The algorithm calculates the proportion of male or female uses of a name in a given birth year or range of years. It thus can provide not only a prediction of the gender of a name, but also a measure of that prediction's likelihood. For example, our program predicts that a person named Leslie born in 1950 is female, but only just barely: 52 percent of the babies named Leslie born in the United States in 1950 were girls and 48 percent were boys. Including these proportion figures allows researchers to conduct more nuanced analysis and to determine for themselves what proportion is acceptable for predicting the gender of names.
 
-We recognize that gender is a fluid concept, both today and in the past, and that this method glosses over the complexities of historical definitions of gender and of the relationship between biological sex and gender \[Butler 1990, Butler 1993]\. In some sense this is unavoidable since the large historical datasets which make this kind of analysis possible were created by state agencies. For the category of gender (as for race) states have offered a limited number of boxes to check, and those boxes extert a tremendous power to define state subjects \[Pascoe 2009, Canaday 2011, Landrum 2014]\.^[The word "identity" is a loaded one in the humanities and social sciences \[Brubaker and Cooper 2000]\. ] Nevertheless, this method is neutral as to what the categories male or female actually mean in any given historical context. Researchers are free---indeed, obligated---to make that determination for themselves, and this package provides access to the underlying dataset so that researchers can interrogate every assumption that comes with them. This method does not argue against the complexities of historical understandings of gender, but as with any project it does require researchers who use the method to think through how the data was gathered, what it implies, and how it reflects social and cultural practices.
+We recognize that gender is a fluid concept, both today and in the past, and that this method glosses over the complexities of historical definitions of gender and of the relationship between biological sex and gender \[Butler 1990, Butler 1993]\. In some sense this is unavoidable since the large historical datasets which make this kind of analysis possible were created by state agencies. For the category of gender (as for race) states have offered a limited number of boxes to check, and those boxes extert a tremendous power to define state subjects \[Brubaker and Cooper 2000, 14-17, Pascoe 2009, Canaday 2011, Landrum 2014]\. This method does not presuppose that the gender binary imposed by governments and their wider societies reflect how an individual identifies oneself and is neutral as to what the categories "male" or "female" actually mean in any given historical context. Researchers are free---indeed, obligated---to make that determination for themselves, and this package provides access to the underlying dataset so that researchers can interrogate every assumption that comes with them. This method does not argue against the complexities of historical understandings of gender, but as with any project it does require researchers who use the method to think through how the data was gathered, what it implies, and how it reflects social and cultural practices.
  
 The remainder of this article is divided into two sections. First, we describe our method in more detail, compare it to existing methods, and explain how to use it. Second, we apply the method to a case study of gatekeeping in the historical profession in order to demonstrate its utility.
  
@@ -159,7 +159,7 @@ kantrowitz_error_rate <- 1 -(sum(cf_results) / length(cf_results))
 kantrowitz_error_rate <- 0.2325766
 ```
 
-The most significant problem with the Kantrowitz names corpus and thus the NLTK implementation is that it assumes that names are timeless. As pointed out above, this makes the corpus problematic for historical purposes. Furthermore the Kantrowitz corpus includes other oddities which make it less suitable. Some names like Abby are overwhelmingly female and some like Bill are overwhelmingly male, but the corpus includes them as both male and female. The Kantrowitz corpus contains only `r kantrowitz_unique` names, a mere `r percent(kantrowitz_unique / ssa_unique)` of the `r ssa_unique` names in the Social Security Administration dataset and `r percent(kantrowitz_unique / ipums_unique)` of the `r ipums_unique` names in the census records provided by IPUMS USA. There are therefore many names that it cannot identify. Assuming for the moment that our method provides more accurate results, we estimate that `r percent(kantrowitz_error_rate)` percent of the names in the Kantrowitz corpus are misclassified or classified as ambigious when a valid prediction could be made. **This isn't immediately obvious to me how this error rate was derived. Do we know why or how Kantrowitz is classifying things as ambiguous? Maybe he's just using a much higher, and theoretically more rigorous, cut-off (say 90%) than our 50% cut-off.**
+The most significant problem with the Kantrowitz names corpus and thus the NLTK implementation is that it assumes that names are timeless. As pointed out above, this makes the corpus problematic for historical purposes. Furthermore the Kantrowitz corpus includes other oddities which make it less suitable. Some names like Abby are overwhelmingly female and some like Bill are overwhelmingly male, but the corpus includes them as both male and female. The Kantrowitz corpus contains only `r kantrowitz_unique` names, a mere `r percent(kantrowitz_unique / ssa_unique)` of the `r ssa_unique` names in the Social Security Administration dataset and `r percent(kantrowitz_unique / ipums_unique)` of the `r ipums_unique` names in the census records provided by Integrated Public Use Microdata (IPUMS) USA. There are therefore many names that it cannot identify. Assuming for the moment that our method provides more accurate results, we estimate that `r percent(kantrowitz_error_rate)` percent of the names in the Kantrowitz corpus are misclassified or classified as ambigious when a valid prediction could be made. **This isn't immediately obvious to me how this error rate was derived. Do we know why or how Kantrowitz is classifying things as ambiguous? Maybe he's just using a much higher, and theoretically more rigorous, cut-off (say 90%) than our 50% cut-off.**
 
 We mention the Kantrowitz name corpus as implemented in NLTK because the Natural Language Toolkit is rightly regarded as influential for scholarship. Its flaws are also typical of the problems with most other implementations of gender prediction algorithms. The Genderize.io API is, for example, a more sophisticated implementation of gender prediction than the NLTK algorithm. Besides predicting male or female for gender, it also reports the proportion of male or female names, along with a count of the number of uses of the name that it is basing its prediction on. Genderize will also permit the user to customize a prediction for different countries, which is an extremely important feature. Genderize.io reports that its "database contains 142848 distinct names across 77 countries and 85 languages." Genderize is unsuitable for historical work, however, because it is based only on contemporary data. According to the documentation for its API, "It utilizes big datasets of information, from user profiles across major social networks." It would be anachronistic to apply these datasets to the past, and Genderize.io provides no functionality to filter results chronologically as it does geographically. In addition, Genderize.io does not make clear exactly what comprises the dataset and how it was gathered, which keeps scholars from interrogating the value of the source \[Genderize.io 2014-]\.^[Quotations are taken from the [Genderize.io website](http://genderize.io), with correspondence from the developer behind the site for confirmation.]
 
@@ -173,29 +173,31 @@ The Gender package currently includes two datasets which make it suitable for st
  
 The Social Security Administration (SSA) "[Baby Names](http://catalog.data.gov/dataset/baby-names-from-social-security-card-applications-national-level-data)" dataset was created as a result of the Social Security Act of 1935 during the New Deal. ^[The Social Security Administration also provides a related dataset which contains the names of applicants broken down by state and year since 1910 \[Social Security Administration 2014-b]\.] This dataset contains a list of first names with the number of male and female uses of the name in every year beginning with 1880 and ending with 2012. The SSA list includes any name which was used more than five times in a given year, thereby capturing all but the most infrequently used names from each year. The description "baby names" provided by the SSA is a serious misnomer. When Social Security first became available during the New Deal, its first beneficiaries were adults past or near retirment age. The dataset goes back to 1880, the birth year for a 55 year-old adult when Social Security was enacted. Even after 1935, registration at birth for Social Security was not mandatory until 1986. As we will demonstrate below, the way in which the data was gathered requires an adjustment to our predictions of gender.^[Shane Landrum has studied the history of birth registration in the United States \[Landrum 2014]\.  It is well-known among American historians that the Social Security Act was written to exclude farmworkers as a means of also excluding African Americans. In examining the dataset we have not found any reason to believe that this policy noticably skewed the prediction of gender from names.]
 
-The IPUMS-USA dataset, contributed by Benjamin Schmidt, contains records from the United States decennial census from 1790 to 1930. This dataset contains the birth year and numbers of males and females under the age of 62 for all the years in that range. This data has been aggregated by IPUMS at the University of Minnesota and is released as a sample of the total census data. Unlike the SSA dataset, which includes 100% of every name reported to the Social Security Administration, the IPUMS data contains 5% or 10% samples. Because the `gender()` function relies on proportions of uses of names, rather than raw counts of people with the names, the sampling does not diminish the reliability of the function's predicitons \[Ruggles et al. 2010]\.
+The IPUMS-USA dataset, contributed by Benjamin Schmidt, contains records from the United States decennial census from 1790 to 1930. This dataset includes the birth year and numbers of males and females under the age of 62 for all the years in that range. This data has been aggregated by IPUMS at the University of Minnesota and is released as a sample of the total census data. Unlike the SSA dataset, which includes 100% of every name reported to the Social Security Administration **not quite - only names that occur more than five times, right?**, the IPUMS data contains 5% or 10% samples. Because the `gender()` function relies on proportions of uses of names, rather than raw counts of people with the names, the sampling does not diminish the reliability of the function's predicitons \[Ruggles et al. 2010]\.
 
-These two datasets (and any future datasets to be added to the package) thus contain a simple table of data. ^[The format of this data departs from the more generally desirable "tidy data" framework proposed by Hadley Wickham for performance reasons. By keeping the data in a "wider" format instead of a tidy format as defined by Wickham, the function is able to make its predictions faster \[Wickham forthcoming]\.] The columns contain the `name`, `year`, and number of `female` and `male` uses of a name. Each row contains a combination for a name and a year. 
+These two datasets (and any future datasets to be added to the package) thus contain a simple table of data. ^[The format of this data departs from the more generally desirable "tidy data" framework proposed by Hadley Wickham for performance reasons. By keeping the data in a "wider" format instead of a tidy format as defined by Wickham, the function is able to make its predictions faster \[Wickham forthcoming]\.] The columns contain the `name`, `year`, and number of `female` and `male` uses of that name in a particular year.
 
 ```{r ssa_national, echo=TRUE, results='markup'}
 genderdata::ssa_national
 ```
 
-
+**unfortunatley the first ten isn't intuitive since it's just "!" rather than names - this is going to confuse readers, I think**
 ```{r ipums_usa, echo=TRUE, results='markup'}
 genderdata::ipums_usa
 ```
 
-Our method for predicting gender is best understood through a series of examples. First we will demonstrate a simplified version of the inner workings of the function for predicting a single name. This example will demonstrate fundamentally how the function works. Next we will demonstrate how to use the function provided in the gender package to predict gender from a small sample dataset.
+Our method for predicting gender is best understood through a series of examples. First we will use it to predict the gender of a single name in order to demonstrate a simplified version of the inner workings of the function. We will then apply it to a small sample dataset to show how a researcher might use it in practice.
 
-The method for predicting gender from a name using the provided datasets is fundamentally simple. Let's begin by assuming that using the Social Security dataset we want to predict the gender of someone named Sidney who was born in 1935. Because the dataset contains a list of names for each year, we can simply lookup the row for Sidney in 1935. Using the [dplyr](https://github.com/hadley/dplyr) package for R, this can be expressed in a simple grammar of filtering by name and year.
+**Example #1: A Sample Name**
+
+The method for predicting gender from a name using the package's datasets is simple. Let's begin by assuming that we want to predict the gender of someone named Sidney who was born in 1935 using the Social Security Administration dataset. Because the dataset contains a list of names for each year, we can simply lookup the row for Sidney in 1935. Using the [dplyr](https://github.com/hadley/dplyr) package for R, this can be expressed in a simple grammar of filtering by name and year.
 
 ```{r, echo=TRUE, results='markup'}
 genderdata::ssa_national %>%
   filter(name == "sidney", year == 1935)
 ```
 
-Thus according to the Social Security Administration, there were 974 boys and 93 females named Sidney born in 1935. We can add another command to calculate the proportion of females and males ("mutate" in dplyr's vocabulary).
+Thus, according to the Social Security Administration, there were 974 boys and 93 girls named Sidney born in 1935. We can add another command to calculate the *proportion* of females and males ("mutate" in dplyr's vocabulary) rather than raw numbers.
 
 ```{r, echo=TRUE, results='markup'}
 genderdata::ssa_national %>%
@@ -204,7 +206,7 @@ genderdata::ssa_national %>%
          proportion_male   = 1 - proportion_female)
 ```
 
-In other words, there is an approximately `r gender("sidney", year = 1935)$proportion_male %>% percent()` percent chance that a person born in 1935 named Sidney was male. (In 2012, for comparison, there was an approximately `r gender("sidney", year = 2012)$proportion_female %>% percent()` percent chance that a person born named Sidney was female.)
+In other words, there is an approximately `r gender("sidney", year = 1935)$proportion_male %>% percent()` percent chance that a person born in 1935 named Sidney was male. In 2012, for comparison, there was an approximately `r gender("sidney", year = 2012)$proportion_female %>% percent()` percent chance that a person born named Sidney was female.
 
 The method is only slightly more complex if we do not know the exact year when someone was born, as is often the case for historical data. Suppose we know that Sidney was born in the 1930s but cannot identify the exact year of his or her birth. Using the same method as above we can look up the name for all of those years.
 
@@ -213,7 +215,7 @@ genderdata::ssa_national %>%
   filter(name == "sidney", year >= 1930 & year <= 1939) 
 ```
 
-Next we can sum up the male and female columns ("summarize" in dplyr's vocabulary) and calculate the proportions of female and male uses.
+Next we can sum up the male and female columns ("summarize" in dplyr's vocabulary) and calculate the proportions of female and male uses of "Sideny" during that decade.
 
 ```{r, echo=TRUE, results='markup'}
 genderdata::ssa_national %>%
@@ -225,7 +227,42 @@ genderdata::ssa_national %>%
          proportion_male   = 1 - proportion_female)
 ```
 
-In other words, for the decade of the 1930s, we can calculate that there is a `r gender("sidney", year = c(1930, 1939))$proportion_male %>% percent()` percent chance tha person named Sidney was male. This is roughly the same as the probability that the name was male in just 1935, but by looking at the underlying counts on which it is based, we can see this proportion was calculated from ten years instead of one.
+In other words, for the decade of the 1930s, we can calculate that there is a `r gender("sidney", year = c(1930, 1939))$proportion_male %>% percent()` percent chance that person named Sidney was male. This is roughly the same as the probability we calculated above for just 1935, but our method also returns the figures it used to calculate those probabilities: 1,067 total instances of "Sidney" in 1935 versus 10,110 instances for the decade as a whole.
+
+**Example #2: A Sample Dataset**
+
+The method's real utility stems from being able to process larger datasets than a single name. Let's use, say, a list of editors from a college newspaper to illustrate how a researcher might apply it to their own data. The package's prediction function allows researchers to choose which reference datasets they would like to use and the range of years for making their predictions.^[See the package vignette for more details: `vignette("predicting-gender", package = "gender")`.]
+
+```{r}
+editors <- data.frame(name = c("Madison", "Madison", "Morgan",
+                                  "Morgan", "Jan", "Jan"),
+                         birth_year = c(1934, 1990, 1948, 1970, 1965, 1998),
+                         stringsAsFactors = FALSE) %>% tbl_df()
+```
+
+```{r, echo=TRUE, results='markup'}
+editors
+```
+
+The simplest way to use the package would be to call the `gender()` function, specifying the method, in this case the Social Security Administration dataset since all the names are after 1930, and convert the results to a data frame (one of R's native data structures).
+
+```{r, echo=TRUE, results='markup'}
+gender(editors$name, method = "ssa") %>% do.call(rbind.data.frame, .)
+```
+
+This basic call of the `gender()` function would be suitable if we did not know the birth year for each editor. But we can also specify that in the `gender()` function by using this call:
+
+```{r, echo=TRUE, results='markup'}
+Map(gender, editors$name, years = editors$birth_year) %>% 
+  do.call(rbind.data.frame, .)
+```
+
+By taking into account the year of birth, we find that four of our six names were likely male, whereas we might otherwise have predicted that all six were female. We also now know the approximate likelihood that our predictions are correct: at least 80% for all of thse predictions.
+
+**I think it might be worth expanding this Example #2 section by a paragraph to show how you can dynamically incorporate periods of time rather than single birth years. A single birth year might make humanists uncomfortable since it implies a precision that a lot of people aren't going to have (like in the case of our dissertations and AHR authors). I changed the example to be a list of editors of a college paper. That way we can easily use an age range of 18-22 to demonstrate how a researcher might implement this.** 
+
+
+**I moved this next caveat section about the SSA data because it felt kind of out of place sandwiched between the two examples. I'm still not sure it fits here, though. I'm trying to figrue out if there's a way to integrate it into the paper that isn't going to be quite so diversionary for the reader.**
 
 As previously mentioned, the history of how the Social Security Administration collected the data effects its validity. Specifically, because the data extends back to 1880 but the first applications were gathered after 1935, the sex ratios in the dataset are skewed, as demonstrated in this plot.
 
@@ -243,34 +280,7 @@ It is extremely improbable that nearly 70 percent of the people born in 1900 wer
 
 The solution to this problem is two-fold. First, we recommend that researchers use the IPUMS-USA dataset to make predictions for years from 1790 to 1930 (which avoids the "bubble" in the SSA data) and that they use the SSA dataset for years since 1930.^[The IPUMS-USA dataset includes only apparently random fluctuations in the gender ratio in any given year.] Second, we have built in a correction to the SSA dataset when using the `gender()` function. If we assume that the secondary sex ratio (that is, the ratio of male to female births) in any given year does not deviate from `0.5` (that is, equality), it is possible to calculate a correction factor for each year or range of years to even out the dataset. We apply this correction factor automatically when using the SSA dataset.
 
-These internal workings are wrapped by the prediction function so that researchers can focus on the choice of datasets and the range of years for making their predictions. Let's use the following sample dataset, say, a membership role, as an example for how to use the function.^[See the package vignette for more details: `vignette("predicting-gender", package = "gender")`.]
 
-```{r}
-membership <- data.frame(name = c("Madison", "Madison", "Morgan",
-                                  "Morgan", "Jan", "Jan"),
-                         birth_year = c(1934, 1990, 1948, 1970, 1965, 1998),
-                         stringsAsFactors = FALSE) %>% tbl_df()
-```
-
-```{r, echo=TRUE, results='markup'}
-membership
-```
-
-The simplest way to use the package would be to call the `gender()` function, specifying the method, in this case the Social Security Administration dataset since all the names are after 1930, and convert the results to a data frame (one of R's native data structures).
-
-```{r, echo=TRUE, results='markup'}
-gender(membership$name, method = "ssa") %>% do.call(rbind.data.frame, .)
-```
-
-This most basic call would be suitable if we did not know the year of birth. But we can also specify that in the `gender()` function by using this call:
-
-```{r, echo=TRUE, results='markup'}
-Map(gender, membership$name, years = membership$birth_year) %>% 
-  do.call(rbind.data.frame, .)
-```
-
-By taking into account the year of birth, we find that four of our six names were likely male, whereas we might otherwise have predicted that all six were female. We also now know the approximate likelyhood that our predictions are correct: at least 80% for all of thse predictions.
- 
 ### II. Measuring Gatekeeping in the Historical Profession
  
 In a 2005 report for the American Historical Association, Elizabeth Lunbeck acknowledged "a sea change in the [historical] profession with respect to gender" before going on to describe the painful limitations of this sea change for female historians: ongoing personal discrimination, lower salaries, and barriers to securing high-ranking positions. Lunbeck's report drew in part on a survey of 362 female historians that produced a rich source of responses detailing the deep and multi-faceted challenges facing women in the profession. What follows is a quantitative supplement to Lunbeck's analysis that uses our program to analyze gender representation amongst historians across a much larger scale and a much longer time period.^[http://www.historians.org/Documents/About%20AHA%20and%20Membership/CWH-Report_5.20.05.pdf]
@@ -390,7 +400,7 @@ In conclusion, our algorithm for predicting gender from first names combined wit
 
 Bird et al. 2009. Bird, Steve, Edward Loper, and Ewan Klein, *Natural Language Processing with Python* (O’Reilly, 2009)
 
-Brubaker and Cooper 2000. Brubaker, Rogers, and Frederick Cooper. “Beyond ‘identity.’” Theory and Society 29.1 (2000): 1–47. 
+Brubaker and Cooper 2000. Brubaker, Rogers, and Frederick Cooper. “Beyond ‘identity.’” *Theory and Society* 29.1 (2000): 1–47. 
 
 Butler 1989. Butler, Judith. *Gender Trouble: Feminism and the Subversion of Identity*. New York: Routledge, 1990.
 
