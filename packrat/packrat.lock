@@ -87,6 +87,12 @@ Version: 1.0.0
 Hash: c8bff66238347472f08b6a35608539ff
 Requires: digest, gtable, MASS, plyr, proto, reshape2, scales
 
+Package: ggthemes
+Source: CRAN
+Version: 1.7.0
+Hash: bd92ca767af16293bfc23d43d6363623
+Requires: colorspace, ggplot2, proto, scales
+
 Package: gridExtra
 Source: CRAN
 Version: 0.9.1

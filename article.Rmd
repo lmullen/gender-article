@@ -15,6 +15,8 @@ library(knitr)
 library(stringr)
 library(scales)
 library(tidyr)
+library(ggthemes)
+library(RColorBrewer)
 
 # TRUE to show code and warnings; FALSE to remove them for publication
 display_code_blocks(FALSE)
@@ -49,7 +51,9 @@ short_scale <- scale_x_continuous(breaks = seq(1950, 2010, 10),
                                   labels = seq(1950, 2010, 10),
                                   limits = c(1950, 2012))
 
-article_theme <- theme(legend.title = element_blank())
+article_theme <- theme(legend.title = element_blank()) 
+
+article_palette <- "Dark2"
 ```
 
 ### Abstract
@@ -319,7 +323,7 @@ diss_predicted %>%
   ggtitle("Dissertations about History by Gender, 1950-2012") +
   xlab(NULL) + ylab(NULL) +
   short_scale + theme(legend.position = "bottom") +
-  scale_fill_discrete(name = "",
+  scale_fill_brewer(palette = article_palette, name = "",
                       labels = c("Female", "Male")) +
   article_theme
 ```
@@ -346,7 +350,8 @@ diss_proportions  %>%
   xlab(NULL) + ylab(NULL) +
   short_scale + theme(legend.position = "bottom") +
   geom_hline(yintercept = 0.5) +
-  scale_fill_discrete(labels = c("Female", "Male", "Unknown")) +
+  scale_fill_brewer(palette = article_palette,
+                    labels = c("Female", "Male", "Unknown")) +
   article_theme
 ```
 
@@ -375,7 +380,8 @@ ahr_proportions %>%
   xlab(NULL) + ylab(NULL) +
   theme(legend.position = "bottom") +
   geom_hline(yintercept = 0.5) +
-  scale_fill_discrete(labels = c("Female", "Male", "Unknown")) +
+  scale_fill_brewer(palette = article_palette,
+                      labels = c("Female", "Male", "Unknown")) +
   article_theme
 ```
  
@@ -394,7 +400,7 @@ combined_proportions %>%
   short_scale +
   scale_size_discrete(name = "Type",
                       labels = c("Book", "Dissertation"), range = c(2,1)) +
-  scale_color_discrete(name = "Gender",
+  scale_color_brewer(palette = article_palette, name = "Gender",
                        labels = c("Female", "Male")) +
   xlab(NULL) + ylab("Proportion of authors by gender") +
   ggtitle("The gap between the genders of book and dissertation authors")
@@ -422,16 +428,15 @@ ahr_predicted %>%
   xlab(NULL) + ylab(NULL) +
   theme(legend.position = "bottom") +
   geom_hline(yintercept = 0.5) +
-  scale_fill_discrete(labels = c("Female", "Male", "Unknown")) +
+  scale_fill_brewer(palette = article_palette, 
+                    labels = c("Female", "Male", "Unknown")) +
   article_theme +
   short_scale
 ```
 
 The American Historical Association also categorizes their reviews under different historical sub-fields. Although the journal’s taxonomy has changed quite a bit over time, it did allow us to refine our analysis. Were there more reviews of female authors in certain sub-fields rather than others, and has that changed over the past forty years? Caribbean/Latin American history has had something approaching equal representation for the past decade-and-a-half. In both African history and Ancient/Medieval history female historians made some quite dramatic gains during the late-nineties and aughts. The most uneven parties, however, are also the two subject categories that publish the most book reviews in the AHR: Modern/Early Modern Europe and the United States/Canada. Both sub-fields have made progress over the four decades but still hover at around two-thirds male. Gender representation is not evenly distributed across the profession.
  
-![Gender of reviewers by category of review](img/categories_gender_bytime.jpg) 
-
-**Do you have the mapping you use from the AHR's 68 categories to the 8 or so you used? With that, I just have one or two more lines to facet this plot.**
+**Cameron: Do you have the mapping you use from the AHR's 68 categories to the 8 or so you used? With that, I just have one or two more lines to facet this plot. (It doesn't look right because it's not faceted yet.)**
 
 ```{r}
 ahr_predicted %>%
@@ -445,16 +450,17 @@ ahr_predicted %>%
          unknown_proportion = unknown / (female + male + unknown)) %>%  
   select(female_proportion, male_proportion, unknown_proportion,
          year, category) %>% 
-  gather(gender, proportion, -year, -category) -> temp
+  gather(gender, proportion, -year, -category) %>%
 ggplot(aes(x = year, y = proportion, fill = gender)) + 
   geom_bar(binwidth = 1, stat = "identity") +
   ggtitle("Gender of reviewers of female book authors in AHR") +
   xlab(NULL) + ylab(NULL) +
   theme(legend.position = "bottom") +
   geom_hline(yintercept = 0.5) +
-  scale_fill_discrete(labels = c("Female", "Male", "Unknown")) +
+  scale_fill_brewer(palette = article_palette,
+                    labels = c("Female", "Male", "Unknown")) +
   article_theme +
-  short_scale +
+  short_scale
 ```
 
 
