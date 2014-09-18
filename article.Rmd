@@ -378,8 +378,6 @@ ahr_proportions %>%
  
 But a closer look shows important differences between the proportion of women writing history dissertations and the proportion of women appearing in the AHR. Although both have trended upwards since the 1970s the slope is a lot steeper for dissertations than it is for the AHR. Female historians have very nearly closed the gaps in terms of newly completed dissertations, but the glass ceiling remains stubbornly low in terms of what happens from that point onwards. In book reviews published in the AHR male authors continue to outnumber female authors by a factor of nearly 2 to 1. The long-term gains made by female doctoral students do not carry over in the pages of the historical profession's leading journal.
  
-![Gap between female authorship of dissertations and books](img/book-dissertation-gap.jpg)
-
 ```{r}
 diss_proportions$type <- "dissertation"
 ahr_proportions$type <- "book"
@@ -404,6 +402,8 @@ The path from a dissertation to an AHR book review is not an automatic one. Not 
 We then used our program to infer the gender of not just book authors reviewed by the AHR, but the gender of the reviewers themselves. The story is much the same for reviewers as it is for authors: more than than twice as many men as women appear as reviewers in the journal. But gender inflects book reviews in less direct ways by shaping who writes reviews of which book authors. About three times as many men write reviews of male-authored books as do women. In the case of female-authored books the ratio of female-to-male reviewers is much closer to 50/50. In short, women are much more likely to write reviews of other women. And while men still write the majority of reviews of female-authored books, they tend to gravitate more towards male authors – who are, of course, already over-represented in the AHR.
  
 ![Gender of reviewers of books authored by women](img/female_authors_withreviewers.jpg) 
+
+
 
 The American Historical Association also categorizes their reviews under different historical sub-fields. Although the journal’s taxonomy has changed quite a bit over time, it did allow us to refine our analysis. Were there more reviews of female authors in certain sub-fields rather than others, and has that changed over the past forty years? Caribbean/Latin American history has had something approaching equal representation for the past decade-and-a-half. In both African history and Ancient/Medieval history female historians made some quite dramatic gains during the late-nineties and aughts. The most uneven parties, however, are also the two subject categories that publish the most book reviews in the AHR: Modern/Early Modern Europe and the United States/Canada. Both sub-fields have made progress over the four decades but still hover at around two-thirds male. Gender representation is not evenly distributed across the profession.
  
