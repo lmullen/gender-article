@@ -13,6 +13,7 @@ library(mullenMisc)
 library(knitr)
 library(stringr)
 library(scales)
+library(tidyr)
 
 # TRUE to show code and warnings; FALSE to remove them for publication
 display_code_blocks(FALSE)
@@ -302,12 +303,33 @@ diss_predicted %>%
   geom_bar(binwidth = 1) +
   ggtitle("Dissertations about History by Gender, 1950-2012") +
   xlab(NULL) + ylab(NULL) +
-  short_scale + theme(legend.position = "bottom")
+  short_scale + theme(legend.position = "bottom") +
+  scale_fill_discrete(name = "",
+                      labels = c("Female", "Male"))
 ```
  
 Another way to examine this trend is to look at the proportion of male and female dissertation authors over time, which smoothes out changes in the absolute number of dissertations produced. The proportion of dissertations written by women has steadily increased over the past half-century, a change that began in the late 1960s and continued through the early 2000's. Since that point, the proportion of dissertations written by women has largely plateaued at a few percentage points below the proportion written by men. Female historians have achieved something approaching parity with male historians in terms of how many women and women complete dissertations each year.
  
-![Proportion of dissertations for each gender](img/dissertations-by-gender-proportion.png)
+```{r}
+diss_predicted %>%
+  select(year, gender_author) %>%
+  filter(year >= 1950) %>%
+  group_by(year, gender_author) %>%
+  summarize(n = n()) %>%
+  spread(gender_author, n) %>% 
+  mutate(female_proportion = female / (female + male),
+         male_proportion = male / (female + male)) %>% 
+  select(female_proportion, male_proportion, year) %>%
+  gather(gender, proportion, -year) %>% 
+  ggplot(aes(x = year, y = proportion, fill = gender)) + 
+  geom_bar(binwidth = 1, stat = "identity") +
+  ggtitle("Proportion of Dissertations about History by Gender, 1950-2012") +
+  xlab(NULL) + ylab(NULL) +
+  short_scale + theme(legend.position = "bottom") +
+  geom_hline(yintercept = 0.5) +
+  scale_fill_discrete(name = "",
+                      labels = c("Female", "Male"))
+```
 
 But what happens after the dissertation? It is, after all, only the first major stage of a historian’s research output. The "coin of the realm" for many historians remains the publication of a scholarly monograph to be read and evaluated by peers. This process often takes the form of book reviews published in academic journals. One of the leading journals in the historical profession is the *American Historical Review*, the flagship journal of the American Historical Association. Along with a few dozen articles, the AHR publishes five issues each year that contain, in aggregate, roughly one thousand books reviews covering (in its own words) "every major field of historical study." The AHR is not only one of the widest-ranging journals in the profession, it is also the oldest; the journal has been publishing continuously since 1895. The range, scope, and length of the AHR makes it an ideal source to analyze the historical profession on a large scale.
  
