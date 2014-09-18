@@ -191,11 +191,6 @@ These two datasets (and any future datasets to be added to the package) thus con
 genderdata::ssa_national
 ```
 
-**unfortunatley the first ten isn't intuitive since it's just "!" rather than names - this is going to confuse readers, I think**
-```{r ipums_usa, echo=TRUE, results='markup'}
-genderdata::ipums_usa
-```
-
 Our method for predicting gender is best understood through a series of examples. First we will use it to predict the gender of a single name in order to demonstrate a simplified version of the inner workings of the function. We will then apply it to a small sample dataset to show how a researcher might use it in practice.
 
 **Example #1: A Sample Name**
