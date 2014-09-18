@@ -123,3 +123,30 @@ ahr_gender_to_merge <- ahr_gender_results$gender_author %>%
   do.call(rbind.data.frame, .) %>%
   mutate(year = year_min + max_author_age) %>%
   tbl_df()
+
+# We need to merge the dissertations and AHR datasets to get the genders in
+# those data sets. We actually need to do this twice for the AHR, because we
+# have both the reviewer name and the author name to predict. We'll also select just the minimum data we need to do our analysis. Then we'll cache the results.
+diss_predicted <- diss %>%
+  merge(diss_gender_to_merge,
+        by.x = c("author_first_name", "year"),
+        by.y = c("name", "year")) %>%
+  tbl_df() %>%
+  select(author, title, gender_author = gender, year)
+
+ahr_predicted <- ahr %>%
+  merge(ahr_gender_to_merge,
+        by.x = c("author_first_name", "issueDate"),
+        by.y = c("name", "year")) %>%
+  tbl_df() %>%
+  mutate(gender_author = gender) %>%
+  merge(ahr_gender_to_merge,
+        by.x = c("reviewer_first_name", "issueDate"),
+        by.y = c("name", "year")) %>%
+  mutate(gender_reviewer = gender.y) %>%
+  select(author = Author_Full, category, title, reviewer = Reviewer_Full,
+         year = issueDate, gender_author, gender_reviewer)
+
+# Save the files
+save(diss_predicted, file = "data/diss-predicted.rda", compress = TRUE)
+save(ahr_predicted, file = "data/ahr-predicted.rda", compress = TRUE)
