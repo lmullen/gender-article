@@ -109,3 +109,17 @@ if(!file.exists(ahr_results_fn)) {
 } else {
   load(ahr_results_fn)
 }
+
+# The previous operation returns a data frame of lists, so lets get just the
+# lists, then turn them into a data frame. Also, since we neglected to save the
+# year of the dissertation or book, which we'll need for the merge, we have to
+# recalculate that from our assumptions about dissertator or author age.
+diss_gender_to_merge <- diss_gender_results$gender_author %>%
+  do.call(rbind.data.frame, .) %>%
+  mutate(year = year_min + max_dissertator_age) %>%
+  tbl_df()
+
+ahr_gender_to_merge <- ahr_gender_results$gender_author %>%
+  do.call(rbind.data.frame, .) %>%
+  mutate(year = year_min + max_author_age) %>%
+  tbl_df()
