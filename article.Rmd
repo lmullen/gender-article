@@ -5,6 +5,7 @@ output: html_document
 ---
 
 ```{r load-libraries, include=FALSE}
+options(stringsAsFactors = FALSE)
 library(genderdata)
 library(gender)
 library(dplyr)
@@ -33,6 +34,20 @@ if(file.exists("data/diss-predicted.rda") &
   source("R/load-data.R")
   source("predict-gender.R")
 }
+
+diss_predicted$gender_author <- diss_predicted$gender_author %>% as.character()
+ahr_predicted$gender_author <- ahr_predicted$gender_author %>% as.character()
+ahr_predicted$gender_reviewer <- ahr_predicted$gender_reviewer %>% as.character()
+
+diss_predicted[is.na(diss_predicted)] <- "unknown"
+ahr_predicted[is.na(ahr_predicted)] <- "unknown"
+
+# Specify article wide chart options
+short_scale <- scale_x_continuous(breaks = seq(1950, 2010, 10),
+                                  labels = seq(1950, 2010, 10),
+                                  limits = c(1950, 2012))
+
+article_theme <- theme(legend.title = element_blank())
 ```
 
 ### Abstract
@@ -292,12 +307,10 @@ The solution to this problem is two-fold. First, we recommend that researchers u
 In a 2005 report for the American Historical Association, Elizabeth Lunbeck acknowledged "a sea change in the [historical] profession with respect to gender" before going on to describe the painful limitations of this sea change for female historians: ongoing personal discrimination, lower salaries, and barriers to securing high-ranking positions. Lunbeck's report drew in part on a survey of 362 female historians that produced a rich source of responses detailing the deep and multi-faceted challenges facing women in the profession. What follows is a quantitative supplement to Lunbeck's analysis that uses our program to analyze gender representation amongst historians across a much larger scale and a much longer time period.^[http://www.historians.org/Documents/About%20AHA%20and%20Membership/CWH-Report_5.20.05.pdf]
  
 Our analysis focuses on one of the bedrocks of the historical profession: scholarly research. We begin with the history dissertation, often the defining scholarly output of a historian's early career. The completion of a dissertation marks a standardized moment of transition out of the "training" phase of the historical profession. Data supplied by ProQuest provided roughly [80,000] PhD(?) dissertations completed since [1950].^[ProQuest's dataset does not permit us to limit dissertations just to dissertations produced in history departments. These dissertations include dissertations *about* history. For a justification of this approach, see a [series of blog posts](http://lincolnmullen.com/research/history-dissertations/) exploring the dataset. The American Historical Association's dataset of dissertations relies on reporting from departments and does not have the chronological range of the ProQuest data. Nevertheless, applying the same method to the AHA's dataset does not provide any reason for thinking that the proportion authorship by gender over time is substantially different when limited to just history department dissertations. American Historical Association, *Directory of History Dissertations*, https://secure.historians.org/pubs/dissertations/. Data export provided to author by Liz Townsend, March 3, 2014.] Identifying the gender of their authors gives a sense for the number of women and men who are completing PhD-level training in history each year. Our program uses the year a historian wrote his or her dissertation to estimate a period for when they might have been born: a historian who completed their dissertation in 1980 was likely born between ____ and _____. Using this temporal information, we are better able to infer their gender and chart how the larger representation of women and men changes year-by-year. 
+
+**Do we even need this chart, or is the chart of proportions sufficient?**
  
 ```{r}
-short_scale <- scale_x_continuous(breaks = seq(1950, 2010, 10),
-                                  labels = seq(1950, 2010, 10),
-                                  limits = c(1950, 2012))
-
 diss_predicted %>%
   ggplot(aes(x = year, fill = gender_author)) + 
   geom_bar(binwidth = 1) +
@@ -305,7 +318,8 @@ diss_predicted %>%
   xlab(NULL) + ylab(NULL) +
   short_scale + theme(legend.position = "bottom") +
   scale_fill_discrete(name = "",
-                      labels = c("Female", "Male"))
+                      labels = c("Female", "Male")) +
+  article_theme
 ```
  
 Another way to examine this trend is to look at the proportion of male and female dissertation authors over time, which smoothes out changes in the absolute number of dissertations produced. The proportion of dissertations written by women has steadily increased over the past half-century, a change that began in the late 1960s and continued through the early 2000's. Since that point, the proportion of dissertations written by women has largely plateaued at a few percentage points below the proportion written by men. Female historians have achieved something approaching parity with male historians in terms of how many women and women complete dissertations each year.
@@ -314,21 +328,22 @@ Another way to examine this trend is to look at the proportion of male and femal
 diss_predicted %>%
   select(year, gender_author) %>%
   filter(year >= 1950) %>%
-  group_by(year, gender_author) %>%
-  summarize(n = n()) %>%
-  spread(gender_author, n) %>% 
-  mutate(female_proportion = female / (female + male),
-         male_proportion = male / (female + male)) %>% 
-  select(female_proportion, male_proportion, year) %>%
+  group_by(year, gender_author) %>% 
+  summarize(n = n()) %>% 
+  spread(gender_author, n, fill = 0) %>% 
+  mutate(female_proportion = female / (female + male + unknown),
+         male_proportion = male / (female + male + unknown),
+         unknown_proportion = unknown / (female + male + unknown)) %>% 
+  select(female_proportion, male_proportion, unknown_proportion, year) %>%
   gather(gender, proportion, -year) %>% 
-  ggplot(aes(x = year, y = proportion, fill = gender)) + 
+  ggplot(aes(x = year, y = proportion, fill = gender)) +
   geom_bar(binwidth = 1, stat = "identity") +
   ggtitle("Proportion of Dissertations about History by Gender, 1950-2012") +
   xlab(NULL) + ylab(NULL) +
   short_scale + theme(legend.position = "bottom") +
   geom_hline(yintercept = 0.5) +
-  scale_fill_discrete(name = "",
-                      labels = c("Female", "Male"))
+  scale_fill_discrete(labels = c("Female", "Male", "Unknown")) +
+  article_theme
 ```
 
 But what happens after the dissertation? It is, after all, only the first major stage of a historian’s research output. The "coin of the realm" for many historians remains the publication of a scholarly monograph to be read and evaluated by peers. This process often takes the form of book reviews published in academic journals. One of the leading journals in the historical profession is the *American Historical Review*, the flagship journal of the American Historical Association. Along with a few dozen articles, the AHR publishes five issues each year that contain, in aggregate, roughly one thousand books reviews covering (in its own words) "every major field of historical study." The AHR is not only one of the widest-ranging journals in the profession, it is also the oldest; the journal has been publishing continuously since 1895. The range, scope, and length of the AHR makes it an ideal source to analyze the historical profession on a large scale.
@@ -337,7 +352,25 @@ We take the AHR as a rough proxy for gatekeeping within the larger historical pr
  
 Scraping the table-of-contents of every issue of the American Historical Review results in a dataset of close to 60,000 books reviewed by the journal since it began publication in 1895. Our program then inferred the gender of the authors of these books, which we could then use to plot the proportion of female and male authors over time. The temporal trajectory of gender representations roughly resembles that of history dissertations: women began making inroads in the late 1960s and have made steady gains over the past four decades. By the twenty-first century the proportion of female authors reviewed in the AHR had more than tripled.
 
-![Gender of authors of books reviewed in the AHR](img/book-authors.jpg)
+```{r}
+ahr_predicted %>%
+  select(year, gender_author) %>%  
+  group_by(year, gender_author) %>% 
+  summarize(n = n()) %>% 
+  spread(gender_author, n, fill = 0) %>%
+  mutate(female_proportion = female / (female + male + unknown),
+         male_proportion = male / (female + male + unknown),
+         unknown_proportion = unknown / (female + male + unknown)) %>%  
+  select(female_proportion, male_proportion, unknown_proportion, year) %>%
+  gather(gender, proportion, -year) %>% 
+  ggplot(aes(x = year, y = proportion, fill = gender)) + 
+  geom_bar(binwidth = 1, stat = "identity") +
+  ggtitle("Authors of Books Reviewed in the AHR by Gender") +
+  xlab(NULL) + ylab(NULL) +
+  theme(legend.position = "bottom") +
+  scale_fill_discrete(labels = c("Female", "Male")) +
+  article_theme
+```
  
 But a closer look shows important differences between the proportion of women writing history dissertations and the proportion of women appearing in the AHR. Although both have trended upwards since the 1970s the slope is a lot steeper for dissertations than it is for the AHR. Female historians have very nearly closed the gaps in terms of newly completed dissertations, but the glass ceiling remains stubbornly low in terms of what happens from that point onwards. In book reviews published in the AHR male authors continue to outnumber female authors by a factor of nearly 2 to 1. The long-term gains made by female doctoral students do not carry over in the pages of the historical profession's leading journal.
  
