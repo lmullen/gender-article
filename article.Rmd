@@ -24,6 +24,8 @@ knit_hooks$set(inline = function(x) {
   prettyNum(x, big.mark=",")
 })
 
+knitr::opts_chunk$set(fig.width = 8, fig.height = 5)
+
 # Load the data frames with the predicted gender, if they exist. Otherwise run
 # the analysis.
 if(file.exists("data/diss-predicted.rda") &
@@ -372,6 +374,7 @@ ahr_proportions %>%
   ggtitle("Authors of Books Reviewed in the AHR by Gender") +
   xlab(NULL) + ylab(NULL) +
   theme(legend.position = "bottom") +
+  geom_hline(yintercept = 0.5) +
   scale_fill_discrete(labels = c("Female", "Male", "Unknown")) +
   article_theme
 ```
@@ -389,12 +392,13 @@ combined_proportions %>%
   ggplot(aes(x = year, y = proportion, color = gender, size = type)) + 
   geom_line() +
   short_scale +
+  geom_hline(yintercept = 0.5) +
   scale_size_discrete(name = "Type",
                       labels = c("Book", "Dissertation"), range = c(2,1)) +
   scale_color_discrete(name = "Gender",
                        labels = c("Female", "Male")) +
   xlab(NULL) + ylab("Proportion of authors by gender") +
-  ggtitle("The gap between between authorship of dissertations and books reviewed in the AHR ")
+  ggtitle("The gap between the genders of book and dissertation authors")
 ```
 
 The path from a dissertation to an AHR book review is not an automatic one. Not all dissertations are published as books, not all books are submitted to the American Historical Review, and not all book submissions are accepted by the AHR editors for review. As of August 2014 the journal’s website reminds readers that "the AHR receives over 3,000 books a year; we have the resources to publish at most 1,000 reviews a year (approximately 200 per issue)."^[http://www.indiana.edu/~ahrweb/book_review_guide.html - retrieved August 25 2014]. Fewer and fewer female historians make it through each successive step. Establishing a single causal reason for this pattern is all but impossible, and instead a murky concoction of interrelated factors likely contributes to the gap. For one, a 2010 survey by the American Historical Association revealed the female historians dedicated substantially more time to child and elder care than their male colleagues, leaving less time for research. This gender gap is more likely to impact the production of a book than a dissertation, as graduate students are generally younger and less likely to be juggling child-rearing responsibilities while writing than their older peers. More insidiously, women continue to face insidious gender discrimination.
