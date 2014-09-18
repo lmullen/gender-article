@@ -1,3 +1,4 @@
+options(stringsAsFactors = FALSE)
 library(gender)
 library(dplyr)
 library(tidyr)

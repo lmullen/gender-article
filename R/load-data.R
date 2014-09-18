@@ -1,5 +1,5 @@
 # Load the data and do any cleaning
-
+options(stringsAsFactors = FALSE)
 library(dplyr)
 library(stringr)
 
