@@ -22,6 +22,16 @@ knit_hooks$set(inline = function(x) {
   prettyNum(x, big.mark=",")
 })
 
+# Load the data frames with the predicted gender, if they exist. Otherwise run
+# the analysis.
+if(file.exists("data/diss-predicted.rda") &
+     file.exists("data/ahr-predicted.rda")) {
+  load("data/diss-predicted.rda")
+  load("data/ahr-predicted.rda")
+} else {
+  source("R/load-data.R")
+  source("predict-gender.R")
+}
 ```
 
 ### Abstract
