@@ -290,10 +290,9 @@ Map(gender, editors$name, years = editors$birth_year) %>%
   do.call(rbind.data.frame, .)
 ```
 
-By taking into account the year of birth, we find that four of our six names were likely male, whereas we might otherwise have predicted that all six were female. We also now know the approximate likelihood that our predictions are correct: at least 80% for all of thse predictions.
+By taking into account the year of birth, we find that four of our six names were likely male, whereas we might otherwise have predicted that all six were female. We also now know the approximate likelihood that our predictions are correct: at least 80% for all of these predictions. 
 
-**I think it might be worth expanding this Example #2 section by a paragraph to show how you can dynamically incorporate periods of time rather than single birth years. A single birth year might make humanists uncomfortable since it implies a precision that a lot of people aren't going to have (like in the case of our dissertations and AHR authors). I changed the example to be a list of editors of a college paper. That way we can easily use an age range of 18-22 to demonstrate how a researcher might implement this.** 
-
+It is also possible to use a range of years for a dataset like this. If our list of editors contained the year in which the person served on the newspaper rather than the birth year, we could make a reasonable assumption that their ages were likely to be between 18 and 24. We could then calculate a minimum and a maximum year of birth for each, and run the prediction function on that range for each person. The exact code to accomplish these types of analysis can be found in the Gender package's vignette.
 
 **I moved this next caveat section about the SSA data because it felt kind of out of place sandwiched between the two examples. I'm still not sure it fits here, though. I'm trying to figrue out if there's a way to integrate it into the paper that isn't going to be quite so diversionary for the reader.**
 
@@ -410,7 +409,9 @@ combined_proportions %>%
   scale_color_brewer(palette = article_palette, name = "Gender",
                        labels = c("Female", "Male")) +
   xlab(NULL) + ylab("Proportion of authors by gender") +
-  ggtitle("The gap between the genders of book and dissertation authors")
+  ggtitle("The gap between the genders of book and dissertation authors") + 
+  article_theme +
+  geom_hline(yintercept = 0.5)
 ```
 
 The path from a dissertation to an AHR book review is not an automatic one. Not all dissertations are published as books, not all books are submitted to the American Historical Review, and not all book submissions are accepted by the AHR editors for review. As of August 2014 the journal’s website reminds readers that "the AHR receives over 3,000 books a year; we have the resources to publish at most 1,000 reviews a year (approximately 200 per issue)."^[http://www.indiana.edu/~ahrweb/book_review_guide.html - retrieved August 25 2014]. Fewer and fewer female historians make it through each successive step. Establishing a single causal reason for this pattern is all but impossible, and instead a murky concoction of interrelated factors likely contributes to the gap. For one, a 2010 survey by the American Historical Association revealed the female historians dedicated substantially more time to child and elder care than their male colleagues, leaving less time for research. This gender gap is more likely to impact the production of a book than a dissertation, as graduate students are generally younger and less likely to be juggling child-rearing responsibilities while writing than their older peers. More insidiously, women continue to face insidious gender discrimination.
