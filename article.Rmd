@@ -213,7 +213,7 @@ The Social Security Administration (SSA) "[Baby Names](http://catalog.data.gov/d
 
 The IPUMS-USA dataset, contributed by Benjamin Schmidt, contains records from the United States decennial census from 1790 to 1930. This dataset includes the birth year and numbers of males and females under the age of 62 for all the years in that range. This data has been aggregated by IPUMS at the University of Minnesota and is released as a sample of the total census data. Unlike the SSA dataset, which includes a 100% sample for every reported to the Social Security Administration and used more than five times, the IPUMS data contains 5% or 10% samples. Because the `gender()` function relies on proportions of uses of names, rather than raw counts of people with the names, the sampling does not diminish the reliability of the function's predictions [Ruggles et al. 2010].
 
-These two datasets (and any future datasets to be added to the package) thus contain a simple table of data. ^[The format of this data departs from the more generally desirable "tidy data" framework proposed by Hadley Wickham for performance reasons. By keeping the data in a "wider" format instead of a tidy format as defined by Wickham, the function is able to make its predictions faster [Wickham forthcoming].] The columns contain the `name`, `year`, and number of `female` and `male` uses of that name in a particular year.
+These two datasets (and any future datasets to be added to the package) thus contain a simple table of data. ^[The format of this data departs from the more generally desirable "tidy data" framework proposed by Hadley Wickham for performance reasons. By keeping the data in a "wider" format instead of a tidy format as defined by Wickham, the function is able to make its predictions faster [Wickham 2014b].] The columns contain the `name`, `year`, and number of `female` and `male` uses of that name in a particular year.
 
 ```{r ssa_national, echo=TRUE, results='markup'}
 genderdata::ssa_national
@@ -479,7 +479,7 @@ In conclusion, our algorithm for predicting gender from first names combined wit
 
 ### References
 
-Bird et al. 2009. Bird, Steve, Edward Loper, and Ewan Klein, *Natural Language Processing with Python* (O’Reilly, 2009)
+Bird et al. 2009. Bird, Steve, Edward Loper, and Ewan Klein, *Natural Language Processing with Python* (O’Reilly, 2009).
 
 Brubaker and Cooper 2000. Brubaker, Rogers, and Frederick Cooper. “Beyond ‘identity.’” *Theory and Society* 29.1 (2000): 1–47. 
 
@@ -513,8 +513,8 @@ Social Security Administration 2014-b. Social Security Administration, "Baby Nam
 
 Weingart 2014. Weingart, Scott. "The Moral Role of DH in a Data-Driven World." *the scottbot irregular*. 9 September 2014, http://www.scottbot.net/HIAL/?p=40944
 
-Wickham, forthcoming. Hadley Wickham, "Tidy Data." *Journal of Statistical Software* (forthcoming), http://vita.had.co.nz/papers/tidy-data.html. 
+Wickham 2014. Hadley Wickham, "Tidy Data." *Journal of Statistical Software*, 50 (2014): http://www.jstatsoft.org/v59/i10.
 
-Wickham and Francois 2014-. Wickham, Hadley and Romain Francois, *dplyr: dplyr: a grammar of data manipulation*. R package version 0.2 (2014): <http://CRAN.R-project.org/package=dplyr>.
+Wickham and Francois 2014. Wickham, Hadley and Romain Francois, *dplyr: dplyr: a grammar of data manipulation*. R package version 0.2 (2014): <http://CRAN.R-project.org/package=dplyr>.
 
 World Bank 2014-. World Bank. "Life expectancy at birth, total (years)." *World Bank Open Data*. Accessed 12 September 2014, http://data.worldbank.org/indicator/SP.DYN.LE00.IN.
