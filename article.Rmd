@@ -209,7 +209,7 @@ The possibilities for inferring gender from names depends on two things. First, 
  
 The Gender package currently uses two datasets which make it suitable for studying the United States from the first federal census in 1790 onwards.^[The authors of the package are both American historians, which explains why the initial release of the package focuses on that country. We have plans, however, to extend the underlying data to six other European and North American countries included in the [North Atlantic Population Project](https://www.nappdata.org/napp/) for the nineteenth century. We also welcome contributions of datasets for other regions and times from other scholars.] The first dataset contains names of applicants for Social Security and available from [Data.gov](https://www.data.gov/). The second dataset contains names gathered in the decennial censuses and available from the IPUMS-USA (Integrated Public Use Microdata Series) service from the Minnesota Population Center at the University of Minnesota.
  
-The Social Security Administration (SSA) "[Baby Names](http://catalog.data.gov/dataset/baby-names-from-social-security-card-applications-national-level-data)" dataset was created as a result of the Social Security Act of 1935 during the New Deal. ^[The Social Security Administration also provides a related dataset which contains the names of applicants broken down by state and year since 1910 [Social Security Administration 2014-b].] This dataset contains a list of first names with the number of male and female uses of the name in every year beginning with 1880 and ending with 2012. The SSA list includes any name which was used more than five times in a given year, thereby capturing all but the most infrequently used names from each year. The description "baby names" provided by the SSA is a serious misnomer. When Social Security became available during the New Deal, its first beneficiaries were adults past or near retirment age. The dataset goes back to 1880, the birth year for a 55 year-old adult when Social Security was enacted. Even after 1935, registration at birth for Social Security was not mandatory until 1986. As we will demonstrate below, the way in which the data was gathered requires an adjustment to our predictions of gender.^[Shane Landrum has studied the history of birth registration in the United States [Landrum 2014].  It is well-known among American historians that the Social Security Act was written to exclude farmworkers as a means of also excluding African Americans. In examining the dataset we have not found any reason to believe that this policy noticably skewed the prediction of gender from names.]
+The Social Security Administration (SSA) "[Baby Names](http://catalog.data.gov/dataset/baby-names-from-social-security-card-applications-national-level-data)" dataset was created as a result of the Social Security Act of 1935 during the New Deal. ^[The Social Security Administration also provides a related dataset which contains the names of applicants broken down by state and year since 1910 [Social Security Administration 2014-b].] This dataset contains a list of first names with the number of male and female uses of the name in every year beginning with 1880 and ending with 2012. The SSA list includes any name which was used more than five times in a given year, thereby capturing all but the most infrequently used names from each year. The description "baby names" provided by the SSA is a serious misnomer. When Social Security became available during the New Deal, its first beneficiaries were adults past or near retirment age. The dataset goes back to 1880, the birth year for a 55 year-old adult when Social Security was enacted. Even after 1935, registration at birth for Social Security was not mandatory until 1986. As we will demonstrate below, the way in which the data was gathered requires an adjustment to our predictions of gender.^[Shane Landrum has studied the history of birth registration in the United States [Landrum 2014]. It is well-known among American historians that the Social Security Act was written to exclude farmworkers as a means of also excluding African Americans. In examining the dataset we have not found any reason to believe that this policy noticably skewed the prediction of gender from names.]
 
 The IPUMS-USA dataset, contributed by Benjamin Schmidt, contains records from the United States decennial census from 1790 to 1930. This dataset includes the birth year and numbers of males and females under the age of 62 for all the years in that range. This data has been aggregated by IPUMS at the University of Minnesota and is released as a sample of the total census data. Unlike the SSA dataset, which includes a 100% sample for every reported to the Social Security Administration and used more than five times, the IPUMS data contains 5% or 10% samples. Because the `gender()` function relies on proportions of uses of names, rather than raw counts of people with the names, the sampling does not diminish the reliability of the function's predictions [Ruggles et al. 2010].
 
@@ -479,42 +479,42 @@ In conclusion, our algorithm for predicting gender from first names combined wit
 
 ### References
 
-Bird et al. 2009. Bird, Steve, Edward Loper, and Ewan Klein, *Natural Language Processing with Python* (O’Reilly, 2009).
+[Bird et al. 2009] Bird, Steve, Edward Loper, and Ewan Klein. *Natural Language Processing with Python* (O’Reilly, 2009).
 
-Brubaker and Cooper 2000. Brubaker, Rogers, and Frederick Cooper. “Beyond ‘identity.’” *Theory and Society* 29.1 (2000): 1–47. 
+[Brubaker and Cooper 2000] Brubaker, Rogers, and Frederick Cooper. "Beyond 'identity.'" *Theory and Society* 29.1 (2000): 1–47. 
 
-Butler 1989. Butler, Judith. *Gender Trouble: Feminism and the Subversion of Identity*. New York: Routledge, 1990.
+[Butler 1989] Butler, Judith. *Gender Trouble: Feminism and the Subversion of Identity*. New York: Routledge, 1990.
 
-Butler 1993. Butler, Judith. *Bodies That Matter: On the Discursive Limits of Sex*. New York: Routledge, 1993.
+[Butler 1993] Butler, Judith. *Bodies That Matter: On the Discursive Limits of Sex*. New York: Routledge, 1993.
 
-Canaday 2011. Canaday, Margot. *The Straight State: Sexuality and Citizenship in Twentieth-Century America*. Princeton, N.J.: Princeton University Press, 2011.
+[Canaday 2011] Canaday, Margot. *The Straight State: Sexuality and Citizenship in Twentieth-Century America*. Princeton, N.J.: Princeton University Press, 2011.
 
-Genderize.io 2014-. *Genderize.io*. Accessed 15 September 2014, http://genderize.io/. 
+[Genderize.io 2014-] *Genderize.io*. Accessed 15 September 2014, http://genderize.io/. 
 
-Goldstone and Underwood 2014. Goldstone, Andrew, and Ted Underwood. "The Quiet Transformations of Literary Studies: What Thirteen Thousand Scholars Could Tell Us." *New Literary History* (Forthcoming 2014).
+[Goldstone and Underwood 2014] Goldstone, Andrew, and Ted Underwood. "The Quiet Transformations of Literary Studies: What Thirteen Thousand Scholars Could Tell Us." *New Literary History* (Forthcoming 2014).
 
-Healy 2013. Healy, Kieran. "Using Metadata to Find Paul Revere." *kieranhealy.org*. 9 June 2013, http://kieranhealy.org/blog/archives/2013/06/09/using-metadata-to-find-paul-revere/
+[Healy 2013] Healy, Kieran. "Using Metadata to Find Paul Revere." *kieranhealy.org*. 9 June 2013, http://kieranhealy.org/blog/archives/2013/06/09/using-metadata-to-find-paul-revere/
 
-Landrum 2014. Landrum, Shane. "The State's Big Family Bible: Birth Certificates, Personal Identity, and Citizenship in the United States, 1840--1950." PhD dissertation, Brandeis University, August 2014.
+[Landrum 2014] Landrum, Shane. "The State's Big Family Bible: Birth Certificates, Personal Identity, and Citizenship in the United States, 1840--1950." PhD dissertation, Brandeis University, August 2014.
 
-Muenchen 2014-. Muenchen, Robert A. "The Popularity of Data Analysis Software," *r4stats.com*. Accessed 12 September 2014, http://r4stats.com/articles/popularity/. 
+[Muenchen 2014-] Muenchen, Robert A. "The Popularity of Data Analysis Software," *r4stats.com*. Accessed 12 September 2014, http://r4stats.com/articles/popularity/. 
 
-Pascoe 2009. Pascoe, Peggy. *What Comes Naturally: Miscegenation Law and the Making of Race in America*. Oxford University Press, USA, 2009.
+[Pascoe 2009] Pascoe, Peggy. *What Comes Naturally: Miscegenation Law and the Making of Race in America*. Oxford University Press, USA, 2009.
 
-Piatetsky 2013. Piatetsky, Gregory. "Top Languages for analytics, data mining, data science," *KDN Nuggets*. 27 August 2013, http://www.kdnuggets.com/2013/08/languages-for-analytics-data-mining-data-science.html. 
+[Piatetsky 2013] Piatetsky, Gregory. "Top Languages for analytics, data mining, data science," *KDN Nuggets*. 27 August 2013, http://www.kdnuggets.com/2013/08/languages-for-analytics-data-mining-data-science.html. 
 
-R Core Team 2014-. R Core Team, *R: A language and environment for statistical computing*. R Foundation for Statistical Computing, Vienna, Austria, 2014. <http://www.R-project.org/>  
+[R Core Team 2014-] R Core Team. *R: A language and environment for statistical computing*. R Foundation for Statistical Computing, Vienna, Austria, 2014. <http://www.R-project.org/>  
 
-Ruggles et al. 2010. Ruggles, Steven, J. Trent Alexander, Katie Genadek, Ronald Goeken, Matthew B. Schroeder, and Matthew Sobek. Integrated Public Use Microdata Series: Version 5.0 [Machine-readable database]. Minneapolis, MN: Minnesota Population Center [producer and distributor], 2010.
+[Ruggles et al. 2010] Ruggles, Steven, J. Trent Alexander, Katie Genadek, Ronald Goeken, Matthew B. Schroeder, and Matthew Sobek. Integrated Public Use Microdata Series: Version 5.0 [Machine-readable database]. Minneapolis, MN: Minnesota Population Center [producer and distributor], 2010.
 
-Social Security Administration 2014-a. Social Security Administration, "Baby Names from Social Security Card Applications-National Level Data". Data.gov dataset ID US-GOV-SSA-338. Accessed 31 August 2014, http://catalog.data.gov/dataset/baby-names-from-social-security-card-applications-national-level-data
+[Social Security Administration 2014-a] Social Security Administration. "Baby Names from Social Security Card Applications-National Level Data". Data.gov dataset ID US-GOV-SSA-338. Accessed 31 August 2014, http://catalog.data.gov/dataset/baby-names-from-social-security-card-applications-national-level-data
 
-Social Security Administration 2014-b. Social Security Administration, "Baby Names from Social Security Card Applications-Data by State and District of Columbia." Data.gov dataset ID US-GOV-SSA-339. Accessed 31 August 2014, http://catalog.data.gov/dataset/baby-names-from-social-security-card-applications-data-by-state-and-district-of-
+[Social Security Administration 2014-b] Social Security Administration. "Baby Names from Social Security Card Applications-Data by State and District of Columbia." Data.gov dataset ID US-GOV-SSA-339. Accessed 31 August 2014, http://catalog.data.gov/dataset/baby-names-from-social-security-card-applications-data-by-state-and-district-of-
 
-Weingart 2014. Weingart, Scott. "The Moral Role of DH in a Data-Driven World." *the scottbot irregular*. 9 September 2014, http://www.scottbot.net/HIAL/?p=40944
+[Weingart 2014] Weingart, Scott. "The Moral Role of DH in a Data-Driven World." *the scottbot irregular*. 9 September 2014, http://www.scottbot.net/HIAL/?p=40944
 
-Wickham 2014. Hadley Wickham, "Tidy Data." *Journal of Statistical Software*, 50 (2014): http://www.jstatsoft.org/v59/i10.
+[Wickham 2014] Wickham, Hadley. "Tidy Data." *Journal of Statistical Software*, 50 (2014): http://www.jstatsoft.org/v59/i10.
 
-Wickham and Francois 2014. Wickham, Hadley and Romain Francois, *dplyr: dplyr: a grammar of data manipulation*. R package version 0.2 (2014): <http://CRAN.R-project.org/package=dplyr>.
+[Wickham and Francois 2014] Wickham, Hadley, and Romain Francois. *dplyr: dplyr: a grammar of data manipulation*. R package version 0.2 (2014): <http://CRAN.R-project.org/package=dplyr>.
 
-World Bank 2014-. World Bank. "Life expectancy at birth, total (years)." *World Bank Open Data*. Accessed 12 September 2014, http://data.worldbank.org/indicator/SP.DYN.LE00.IN.
+[World Bank 2014-] World Bank. "Life expectancy at birth, total (years)." *World Bank Open Data*. Accessed 12 September 2014, http://data.worldbank.org/indicator/SP.DYN.LE00.IN.
