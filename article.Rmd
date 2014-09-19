@@ -51,7 +51,8 @@ short_scale <- scale_x_continuous(breaks = seq(1950, 2010, 10),
                                   labels = seq(1950, 2010, 10),
                                   limits = c(1950, 2012))
 
-article_theme <- theme(legend.title = element_blank()) 
+# I like 
+article_theme <- theme(legend.title = element_blank()) + theme_few()
 
 article_palette <- "Dark2"
 ```
@@ -86,11 +87,12 @@ leslie_plot <- leslie_df %>%
   ggplot(aes(x = year, y = prop_female)) +
   geom_smooth() + 
   geom_point() +
-  ggtitle("Proportion of female uses of the name 'Leslie,' 1820-2012") +
+  ggtitle("Proportion of female uses of the name Leslie, 1820-2012") +
   xlab(NULL) + ylab(NULL) + ylim(0, 1) +
   geom_hline(yintercept = 0.5) + 
   annotate("text", x = 1900, y = 0.45, label = "Male") +
-  annotate("text", x = 1900, y = 0.55, label = "Female") 
+  annotate("text", x = 1900, y = 0.55, label = "Female") +
+  article_theme
 
 leslie_plot %>%
   gg_attribution("Data: IPUMS USA; Social Security Administration") %>%
@@ -119,7 +121,8 @@ ggplot(aes(x = year, y = prop_female, color = name)) +
   xlab(NULL) + ylab(NULL) + ylim(0, 1) +
   geom_hline(yintercept = 0.5) +
   annotate("text", x = 1965, y = 0.45, label = "Male") +
-  annotate("text", x = 1965, y = 0.55, label = "Female") 
+  annotate("text", x = 1965, y = 0.55, label = "Female") +
+  article_theme
 
 selected_names_plot %>%
   gg_attribution("Data: Social Security Administration") %>%
@@ -300,7 +303,8 @@ genderdata::ssa_national %>%
   ggplot(aes(x = year, y = ratio)) +
   geom_line() +
   ggtitle("Percentage of SSA dataset that is female") +
-  xlab(NULL) + ylab(NULL)
+  xlab(NULL) + ylab(NULL) +
+  article_theme
 ```
 
 It is extremely improbable that nearly 70 percent of the people born in 1900 were female. Exactly why the dataset has this bias is unclear, though we speculate that it is because the applicants for Social Security in the early years of the program were approaching retirement age, which was set much closer to the average life expectancy in 1935 than it is today. Since women tend to live longer than men, they were overrepresented in Social Security applications.
