@@ -63,8 +63,8 @@ This paper addresses two trends in the humanities: the rise of gender as an anal
 
 ### Introduction: The "Leslie" Problem
  
-As humanities researchers grapple with larger and larger datasets they will increasingly be able to not just extract existing information from that data but to also infer additional information from it [Goldstone and Underwood 2014]. ^[The availability of large-scale datasets dealing with personal information raises important ethical issues for digital humanists, particularly in light of the revelations about domestic spying at the NSA brought forth by Edward Snowden in 2013. [Weingart 2014] Kieran Healy has used network analysis to demonstrate how researchers can infer information from datasets while also touching on the troubling ethical issue of surveillance [Healy 2013].] Many of these datasets deal with lists of people: company payrolls, military rosters, passenger bookings, records of correspondence, or lists of published works. Some of these records might contain associated information such a person's address, age, or rank, while others contain little more than a list of personal names. Given large but sparse datasets, researchers have to use their ingenuity to derive additional kinds of information. What can researchers infer from just a name? On a basic level, first names often imply a person's gender. "Jane Fay" is almost certainly a woman, while her brother "John Fay" is almost certainly a man. Given a dataset matching names to genders, a straightforward computer program can easily infer their respective genders.
- 
+As humanities researchers grapple with larger and larger datasets they will increasingly be able to not just extract existing information from that data but to also infer additional information from it [Goldstone and Underwood 2014].^[The availability of large-scale datasets dealing with personal information raises important ethical issues for digital humanists, particularly in light of the revelations about domestic spying at the NSA brought forth by Edward Snowden in 2013. [Weingart 2014] Kieran Healy has used network analysis to demonstrate how researchers can infer information from datasets while also touching on the troubling ethical issue of surveillance [Healy 2013].] Many of these datasets deal with lists of people: company payrolls, military rosters, passenger bookings, records of correspondence, or lists of published works. Some of these records might contain associated information such a person's address, age, or rank, while others contain little more than a list of personal names. Given large but sparse datasets, researchers have to use their ingenuity to derive additional kinds of information. What can researchers infer from just a name? On a basic level, first names often imply a person's gender. "Jane Fay" is almost certainly a woman, while her brother "John Fay" is almost certainly a man. Given a dataset matching names to genders, a straightforward computer program can easily infer their respective genders. 
+
 The problem with inferring gender from names is that the link between gender and naming practices, like language itself, is not static. What about Jane and John Fay's sibling, Leslie? If Leslie was born in the past sixty years, chances are good that Leslie would be their sister. But if the three siblings were born in the early twentieth century, chances are good that Leslie would be their brother. That is because the conventional gender for the name Leslie switched over the course of one hundred years. In 1900 some 92% of the babies born in the United States who were named Leslie were male, while in 2000 about 96% of the Leslies born in that year were female.
 
 ```{r plot-leslie}
@@ -87,8 +87,8 @@ leslie_plot <- leslie_df %>%
   ggplot(aes(x = year, y = prop_female)) +
   geom_smooth() + 
   geom_point() +
-  ggtitle("Proportion of female uses of the name Leslie, 1820-2012") +
-  xlab(NULL) + ylab(NULL) + ylim(0, 1) +
+  ggtitle("Gender of the name Leslie, 1820-2012") +
+  xlab(NULL) + ylab("Proportion of female uses") + ylim(0, 1) +
   geom_hline(yintercept = 0.5) + 
   annotate("text", x = 1900, y = 0.45, label = "Male") +
   annotate("text", x = 1900, y = 0.55, label = "Female") +
@@ -99,9 +99,9 @@ leslie_plot %>%
   print()
 ```
 
-Other names used in the United States such as Madison, Morgan, Sydney, and Kendall, have also "flipped" their gender over the past century. Such changes usually follow set patterns. In general, names tend to shift from being predominantly male to being predominantly female; the shift rarely moves in the other direction. In general, names that transition from male to female also became increasingly popular over time. For example, the name "Madison" changed from male to female quite suddenly after 1985. Whereas before it had been an infrequently used male name, after 1985 it skyrocketed in popularity and by the early 2000s was one of the ten most frequently used names for baby girls. Broadly speaking, in the late twentieth century Americans girls became increasingly more likely than American boys to receive a "trendy" name, and once that name was associated with women it was unlikely to be given to male babies. These names present a moving target for researchers hoping to use them to infer additional information about the people under study. ^[The few exceptions of names which flip from being female to male, such as "Jan", have a different causal mechanism. It seems likely that Jan as an English name is female but that Jan as a Scandinavian name is male. Because the name has remained relatively uncommon, other causes besides changing gender preferences can explain the change.]
+Other names used in the United States such as Madison, Morgan, Sydney, and Kendall, have also flipped their gender over the past century. Such changes usually follow set patterns. In general, names tend to shift from being predominantly male to being predominantly female; the shift rarely happens in the other direction. In general, names that transition from male to female also became increasingly popular over time. For example, the name "Madison" changed from male to female quite suddenly after 1985. Whereas before it had been an infrequently used male name, after 1985 it skyrocketed in popularity and by the early 2000s was one of the ten most frequently used names for baby girls. Broadly speaking, in the late twentieth century Americans girls became increasingly more likely than American boys to receive a "trendy" name, and once that name was associated with females it was unlikely to be given to male babies. These names present a moving target for researchers hoping to use them to infer additional information about the people under study. In addition, the prevalance of changes in the gender of names in the last half of the twentieth century implies that gendered lists of names drawn from contemporary data are anachronistic and so of little use for earlier periods.^[The few exceptions of names which flip from being female to male, such as "Jan", have a different causal mechanism. We speculate that Jan as an English name is female but that Jan as a Scandinavian name is male. Because the name has remained relatively uncommon, other causes besides changing gender preferences can explain the change.]
 
-```{r plot_names_that_change}
+```{r plot-names-that-change}
 plot_names <-  c("madison",
                  "keanu",
                  "addison",
@@ -116,14 +116,15 @@ selected_names_plot <- ssa_national %>%
   mutate(prop_female = female / (female + male)) %>%
 ggplot(aes(x = year, y = prop_female, color = name)) +
   geom_smooth(se = FALSE) +
-  ggtitle("Changes in selected names, 1930-2012") +
+  ggtitle("Changes in gender of selected names, 1930-2012") +
   xlim(1930, 2012) + 
-  xlab(NULL) + ylab(NULL) + ylim(0, 1) +
+  xlab(NULL) + ylab("Proportion of female uses") + ylim(0, 1) +
   geom_hline(yintercept = 0.5) +
   annotate("text", x = 1965, y = 0.45, label = "Male") +
   annotate("text", x = 1965, y = 0.55, label = "Female") +
-  article_theme
-
+  article_theme +
+  scale_color_brewer(palette = article_palette, name = "")
+  
 selected_names_plot %>%
   gg_attribution("Data: Social Security Administration") %>%
   print()
