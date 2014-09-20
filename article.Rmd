@@ -163,33 +163,49 @@ One can then easily write a function which looks up the gender of a given name.
 gender("abby", method = "kantrowitz")
 ```
 
-```{r compare-kantrowitz-ssa, cache=TRUE, eval=FALSE}
+```{r compare-kantrowitz-ssa}
 # Calculate the error rate of the Kantrowitz data set. This code is very slow, 
 # so I have disabled evaluating and hardcoded the value into the text for now.
 # We can re-run this for the final version of the article.
-cf_kantrowitz_ssa <- data.frame(name = unique(genderdata::kantrowitz$name),
-                                stringsAsFactors = FALSE)
+if (file.exists("data/cf-kantrowitz-ssa.rda")) {
+  load("data/cf-kantrowitz-ssa.rda")
+  } else {
+  cf_kantrowitz_ssa <- data.frame(name = unique(genderdata::kantrowitz$name),
+                                  stringsAsFactors = FALSE)
+  
+  # For just the names in the Kantrowitz corpus, predict the gender with both the Kantrowitz and the SSA method.
+  cf_kantrowitz_ssa <- cf_kantrowitz_ssa %>%
+    group_by(name) %>%
+    do(kantrowitz = gender(name = .$name, method = "kantrowitz")$gender,
+       ssa = gender(name = .$name, method = "ssa")$gender)
+  
+  cf_kantrowitz_ssa$kantrowitz <- as.character(cf_kantrowitz_ssa$kantrowitz) 
+  cf_kantrowitz_ssa$ssa<- as.character(cf_kantrowitz_ssa$ssa) 
+  cf_kantrowitz_ssa[cf_kantrowitz_ssa == "NA"]  <- NA
+  save(cf_kantrowitz_ssa, file = "data/cf-kantrowitz-ssa.rda", compress = TRUE)
+  }
 
-# For just the names in the Kantrowitz corpus, predict the gender with both the Kantrowitz and the SSA method.
-cf_kantrowitz_ssa <- cf_kantrowitz_ssa %>%
-  group_by(name) %>%
-  do(kantrowitz = gender(name = .$name, method = "kantrowitz")$gender,
-     ssa = gender(name = .$name, method = "ssa")$gender)
+# Check for mismatches between Kantrowitz and our method
+false_either <- ifelse((cf_kantrowitz_ssa$kantrowitz == "either" &
+                          (cf_kantrowitz_ssa$ssa == "male" |
+                             cf_kantrowitz_ssa$ssa == "female")),
+                     TRUE, FALSE)
 
-cf_results <- as.character(cf_kantrowitz_ssa$kantrowitz) ==
-  as.character(cf_kantrowitz_ssa$ssa)
+false_male <- ifelse(cf_kantrowitz_ssa$kantrowitz == "male" &
+                     cf_kantrowitz_ssa$ssa == "female",
+                     TRUE, FALSE)
 
-# Error rate is the number of mismatches to the total number of names
-kantrowitz_error_rate <- 1 -(sum(cf_results) / length(cf_results))
+false_female <- ifelse(cf_kantrowitz_ssa$kantrowitz == "female" &
+                     cf_kantrowitz_ssa$ssa == "male",
+                     TRUE, FALSE)
+
+false_either_percent <- sum(false_either, na.rm = TRUE) / nrow(cf_kantrowitz_ssa)
+false_male_percent <- sum(false_male, na.rm = TRUE) / nrow(cf_kantrowitz_ssa)
+false_female_percent <- sum(false_female, na.rm = TRUE) / nrow(cf_kantrowitz_ssa)
+
 ```
 
-```{r}
-# Hardcode the error rate for now. This value is based on running the code above
-# locally.
-kantrowitz_error_rate <- 0.2325766
-```
-
-The most significant problem with the Kantrowitz names corpus and thus the NLTK implementation is that it assumes that names are timeless. As pointed out above, this makes the corpus problematic for historical purposes. Furthermore the Kantrowitz corpus includes other oddities which make it less useful for research. Some names such as Abby are overwhelmingly female and some such as Bill are overwhelmingly male, but the corpus includes them as both male and female. The Kantrowitz corpus contains only `r kantrowitz_unique` unique names, a mere `r percent(kantrowitz_unique / ssa_unique)` of the `r ssa_unique` unique names in a dataset provided by the Social Security Administration and `r percent(kantrowitz_unique / ipums_unique)` of the `r ipums_unique` unique names in the census records provided in the Integrated Public Use Microdata Series (IPUMS) USA dataset. There are therefore many names that it cannot identify. Assuming for the moment that our method provides more accurate results, we estimate that `r percent(kantrowitz_error_rate)` percent of the names in the Kantrowitz corpus are misclassified or classified as ambigious when a valid prediction could be made. **This isn't immediately obvious to me how this error rate was derived. Do we know why or how Kantrowitz is classifying things as ambiguous? Maybe he's just using a much higher, and theoretically more rigorous, cut-off (say 90%) than our 50% cut-off.**
+The most significant problem with the Kantrowitz names corpus and thus the NLTK implementation is that it assumes that names are timeless. As pointed out above, this makes the corpus problematic for historical purposes. Furthermore the Kantrowitz corpus includes other oddities which make it less useful for research. Some names such as Abby are overwhelmingly female and some such as Bill are overwhelmingly male, but the corpus includes them as both male and female. The Kantrowitz corpus contains only `r kantrowitz_unique` unique names, a mere `r percent(kantrowitz_unique / ssa_unique)` of the `r ssa_unique` unique names in a dataset provided by the Social Security Administration and `r percent(kantrowitz_unique / ipums_unique)` of the `r ipums_unique` unique names in the census records provided in the Integrated Public Use Microdata Series (IPUMS) USA dataset. There are therefore many names that it cannot identify. Assuming for the moment that our method provides more accurate results, we estimate that `r percent(false_either_percent)` percent of the names in the Kantrowitz corpus are classified ambiguously when a gender could be reasonably predicted from the name, that `r percent(false_male_percent)` percent of the names are classified as male when they should be classified as female, and that `r percent(false_female_percent)` are classified as female when they should be classified as male. This error rate is a separate concern from the much smaller size of the Kantrowitz corpuse.^[This error rate was calculated using the Social Security Administration database, assuming a range of years between 1932 and 2012, which is the default setting within the Gender package. Of course, the error rate would fluctuate for different time periods and regions.]
 
 We mention the Kantrowitz name corpus as implemented in NLTK because the Natural Language Toolkit is rightly regarded as influential for scholarship. Its flaws for predicting gender, which are a minor part of the software's total functionality, are also typical of the problems with most other implementations of gender prediction algorithms. The Genderize.io API is, for example, a more sophisticated implementation of gender prediction than the NLTK algorithm. Besides predicting male or female for gender, it also reports the proportion of male or female names, along with a count of the number of uses of the name that it is basing its prediction on. Genderize will also permit the user to customize a prediction for different countries, which is an important feature. Genderize.io reports that its "database contains 142848 distinct names across 77 countries and 85 languages." Genderize is unsuitable for historical work, however, because it is based only on contemporary data. According to the documentation for its API, "It utilizes big datasets of information, from user profiles across major social networks." It would be anachronistic to apply these datasets to the past, and Genderize.io provides no functionality to filter results chronologically as it does geographically. In addition, Genderize.io does not make clear exactly what comprises the dataset and how it was gathered, which keeps scholars from interrogating the value of the source [Genderize.io 2014-].^[Quotations are taken from the [Genderize.io website](http://genderize.io), with correspondence from the site's developer for confirmation.]
 
