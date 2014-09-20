@@ -83,7 +83,7 @@ ssa_leslie <- genderdata::ssa_national %>%
 leslie_df <- rbind(ipums_leslie, ssa_leslie) %>%
   mutate(prop_female = female / (female + male)) 
 
-leslie_plot <- leslie_df %>%
+leslie_df %>%
   ggplot(aes(x = year, y = prop_female)) +
   geom_smooth() + 
   geom_point() +
@@ -93,10 +93,6 @@ leslie_plot <- leslie_df %>%
   annotate("text", x = 1900, y = 0.45, label = "Male") +
   annotate("text", x = 1900, y = 0.55, label = "Female") +
   article_theme
-
-leslie_plot %>%
-  gg_attribution("Data: IPUMS USA; Social Security Administration") %>%
-  print()
 ```
 
 Other names used in the United States such as Madison, Morgan, Sydney, and Kendall, have also flipped their gender over the past century. Such changes usually follow set patterns. In general, names tend to shift from being predominantly male to being predominantly female; the shift rarely happens in the other direction. In general, names that transition from male to female also became increasingly popular over time. For example, the name "Madison" changed from male to female quite suddenly after 1985. Whereas before it had been an infrequently used male name, after 1985 it skyrocketed in popularity and by the early 2000s was one of the ten most frequently used names for baby girls. Broadly speaking, in the late twentieth century Americans girls became increasingly more likely than American boys to receive a "trendy" name, and once that name was associated with females it was unlikely to be given to male babies. These names present a moving target for researchers hoping to use them to infer additional information about the people under study. In addition, the prevalance of changes in the gender of names in the last half of the twentieth century implies that gendered lists of names drawn from contemporary data are anachronistic and so of little use for earlier periods.^[The few exceptions of names which flip from being female to male, such as "Jan", have a different causal mechanism. We speculate that Jan as an English name is female but that Jan as a Scandinavian name is male. Because the name has remained relatively uncommon, other causes besides changing gender preferences can explain the change.]
@@ -111,7 +107,7 @@ plot_names <-  c("madison",
                  "leslie",
                  "kendall")
 
-selected_names_plot <- ssa_national %>%
+ssa_national %>%
   filter(name %in% plot_names) %>%
   mutate(prop_female = female / (female + male)) %>%
 ggplot(aes(x = year, y = prop_female, color = name)) +
@@ -124,10 +120,6 @@ ggplot(aes(x = year, y = prop_female, color = name)) +
   annotate("text", x = 1965, y = 0.55, label = "Female") +
   article_theme +
   scale_color_brewer(palette = article_palette, name = "")
-  
-selected_names_plot %>%
-  gg_attribution("Data: Social Security Administration") %>%
-  print()
 ```
 
 For those working on contemporary subjects the "Leslie" problem is not an especially pressing one. An education policy analyst studying the demographics of different urban school districts, for instance, can turn to a variety of tools that use current databases of names, and these tools will likely identify the gender of Leslie Fay correctly. One online service, [Genderize.io](http://genderize.io/), determines the gender of first names "from user profiles across major social networks." Checking the service for the name Leslie returns a prediction that the name is female, along with an estimate of male/female proportions of the uses among members of unnamed social media sites.^[In this example the Genderize.io service has been accessed through an API wrapper provided in our Gender package described below.]
