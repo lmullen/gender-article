@@ -321,7 +321,7 @@ Our analysis focuses on one of the bedrocks of the historical profession: schola
 diss_predicted %>%
   ggplot(aes(x = year, fill = gender_author)) + 
   geom_bar(binwidth = 1) +
-  ggtitle("Dissertations about History by Gender, 1950-2012") +
+  ggtitle("Dissertations about history by gender, 1950-2012") +
   xlab(NULL) + ylab(NULL) +
   short_scale + theme(legend.position = "bottom") +
   scale_fill_brewer(palette = article_palette, name = "",
@@ -347,7 +347,7 @@ diss_proportions <- diss_predicted %>%
 diss_proportions  %>%
   ggplot(aes(x = year, y = proportion, fill = gender)) +
   geom_bar(binwidth = 1, stat = "identity") +
-  ggtitle("Proportion of Dissertations about History by Gender, 1950-2012") +
+  ggtitle("Proportion of dissertations about history by gender, 1950-2012") +
   xlab(NULL) + ylab(NULL) +
   short_scale + theme(legend.position = "bottom") +
   geom_hline(yintercept = 0.5) +
@@ -377,7 +377,7 @@ ahr_proportions <- ahr_predicted %>%
 ahr_proportions %>%
   ggplot(aes(x = year, y = proportion, fill = gender)) + 
   geom_bar(binwidth = 1, stat = "identity") +
-  ggtitle("Authors of Books Reviewed in the AHR by Gender") +
+  ggtitle("Authors of books reviewed in the AHR by gender") +
   xlab(NULL) + ylab(NULL) +
   theme(legend.position = "bottom") +
   geom_hline(yintercept = 0.5) +
@@ -456,7 +456,7 @@ ahr_predicted %>%
   gather(gender, proportion, -year, -category) %>%
 ggplot(aes(x = year, y = proportion, fill = gender)) + 
   geom_bar(binwidth = 1, stat = "identity") +
-  ggtitle("Gender of reviewers of female book authors in AHR") +
+  ggtitle("Gender of reviewers of female book authors in AHR by category") +
   xlab(NULL) + ylab(NULL) +
   theme(legend.position = "bottom") +
   geom_hline(yintercept = 0.5) +
