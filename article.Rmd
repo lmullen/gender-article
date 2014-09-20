@@ -1,5 +1,5 @@
 ---
-title: "Jane, John … Leslie? A Historical Method for Algorithmic Gender Detection"
+title: "Jane, John … Leslie? A Historical Method for Algorithmic Gender Prediction"
 author: "Cameron Blevins and Lincoln Mullen"
 output: html_document
 ---
