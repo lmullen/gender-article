@@ -294,8 +294,6 @@ By taking into account the year of birth, we find that four of our six names wer
 
 It is also possible to use a range of years for a dataset like this. If our list of editors contained the year in which the person served on the newspaper rather than the birth year, we could make a reasonable assumption that their ages were likely to be between 18 and 24. We could then calculate a minimum and a maximum year of birth for each, and run the prediction function on that range for each person. The exact code to accomplish these types of analysis can be found in the Gender package's vignette.
 
-**I moved this next caveat section about the SSA data because it felt kind of out of place sandwiched between the two examples. I'm still not sure it fits here, though. I'm trying to figrue out if there's a way to integrate it into the paper that isn't going to be quite so diversionary for the reader. LAM: okay, wherever you think is best.**
-
 As previously mentioned, the history of how the Social Security Administration collected the data effects its validity. Specifically, because the data extends back to 1880 but the first applications were gathered after 1935, the sex ratios in the dataset are skewed, as demonstrated in this plot.
 
 ```{r}
