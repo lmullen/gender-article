@@ -1,0 +1,87 @@
+category	category (group)
+Africa	Africa
+Africat	Africa
+Sub-Saharan Africa	Africa
+Subâ€Saharan Africa	Africa
+Americas	Americas
+Ancient	Ancient and Medieval
+Ancient and Medieval	Ancient and Medieval
+Ancient and Medieval History	Ancient and Medieval
+Europe: Ancient and Medieval	Ancient and Medieval
+Europe: Ancient and Modern	Ancient and Medieval
+Medieval	Ancient and Medieval
+Medieval and Modern History	Ancient and Medieval
+Medieval History	Ancient and Medieval
+Medievel	Ancient and Medieval
+Medival	Ancient and Medieval
+Ancient History	Ancient History
+Articles	Articles
+Asia	Asia
+Asia and the East	Asia
+Asia and the Far East	Asia
+Oceania and Pacific Islands	Asia
+Oceania and the Pacific Islands	Asia
+Oceania/Pacific Islands	Asia
+Book of Ancient History	Book of Ancient History
+Books of American history	Books of American history
+Books of Ancient and Medieval History	Books of Ancient and Medieval History
+Books of Ancient History	Books of Ancient History
+Books of General and Ancient History	Books of General and Ancient History
+Books of General History	Books of General History
+Books of General, Ancient, and Medieval History	Books of General, Ancient, and Medieval History
+Books of Medieval and Modern European History	Books of Medieval and Modern European History
+Books of Medieval and Modern History	Books of Medieval and Modern History
+Books of Medieval and Modern. European History	Books of Medieval and Modern. European History
+Books of Medieval History	Books of Medieval History
+Books of Modern European History	Books of Modern European History
+Books of Modern History	Books of Modern History
+Books on the Far East	Books on the Far East
+Europe: Early Modern and Modern	Europe: Modern and Early Modern
+Europe: Modern and Early Modern	Europe: Modern and Early Modern
+Modem Europe	Europe: Modern and Early Modern
+Modern Europe	Europe: Modern and Early Modern
+Modern European History	Europe: Modern and Early Modern
+Far East	Far East
+Far Eastern History	Far Eastern History
+Caribbean and Latin America	Latin America and Caribbean
+Caribbean and Latin American	Latin America and Caribbean
+Latin America	Latin America and Caribbean
+Latin America and the Caribbean	Latin America and Caribbean
+Latin American History	Latin America and Caribbean
+Middle East	Middle East
+Middle East and Northern Africa	Middle East
+Midldle East and Northern Africa	Middle East
+Near East	Middle East
+Modern Oriental History	Modern Oriental History
+Near and Far Eastern History	Near and Far Eastern History
+Near Eastern History	Near Eastern History
+Comparative World	Other/NoCategory
+Comparative/World	Other/NoCategory
+Featured Review	Other/NoCategory
+Featured Reviews	Other/NoCategory
+Film Reviews	Other/NoCategory
+Genaral	Other/NoCategory
+General	Other/NoCategory
+General and Ancient History	Other/NoCategory
+General Books	Other/NoCategory
+General Books and Books of Ancient and Medieval History	Other/NoCategory
+General books and Books of ancient history	Other/NoCategory
+General History	Other/NoCategory
+Method/Theory	Other/NoCategory
+Methods and Theory	Other/NoCategory
+Methods/Theory	Other/NoCategory
+no category	Other/NoCategory
+Personal Reminiscences of the Wars of Napoleon	Personal Reminiscences of the Wars of Napoleon
+Reviews of Books	Reviews of Books
+Reviews of Books General Books and Books of Ancient History	Reviews of Books General Books and Books of Ancient History
+Reviews of Books General History	Reviews of Books General History
+Text-Book	Text-Book
+Text-Books	Text-Books
+America	United States and Canada
+American History	United States and Canada
+Canada	United States and Canada
+Canada and the United States	United States and Canada
+Canada and United States	United States and Canada
+U. S. State History	United States and Canada
+United States	United States and Canada
+United States History	United States and Canada
