@@ -484,7 +484,7 @@ ggplot(aes(x = year, y = proportion, fill = gender)) +
   theme(strip.background = element_rect(color = "white"))
 ```
 
-One 2013 analysis of 2,500 recent history Ph.D.'s found that "gender played little role in employment patterns across particular professions and industries."^[http://historians.org/Documents/Many_Careers_of_History_PhDs_Final.pdf] Our own analysis reveals a more complicated reality. The flagship journal of professional historians continues to publish twice as many reviews of books by male authors as female authors. This disparity is put into even sharper relief when set against the relative parity achieved by women in producing history dissertations. Women might be getting hired at comparable rates to men, but discriminatory gatekeeping remains alive and well in the profession. Our program allows us to quantitatively measure the scope of the problem on a large scale, how it's changed over time, and what remains to be done.
+One 2013 analysis of 2,500 recent history Ph.D.'s found that "gender played little role in employment patterns across particular professions and industries" [Wood and Townsend 2013]. Our own analysis reveals a more complicated reality. The flagship journal of professional historians continues to publish twice as many reviews of books by male authors as female authors. This disparity is put into even sharper relief when set against the relative parity achieved by women in producing history dissertations. Women might be getting hired at comparable rates to men, but discriminatory gatekeeping remains alive and well in the profession. Our program allows us to quantitatively measure the scope of the problem on a large scale and how it has changed over time.
  
 ### Conclusion
  
@@ -531,5 +531,7 @@ Our algorithm for predicting gender from first names, when combined with histori
 [Wickham 2014] Wickham, Hadley. "Tidy Data." *Journal of Statistical Software*, 50 (2014): http://www.jstatsoft.org/v59/i10.
 
 [Wickham and Francois 2014] Wickham, Hadley, and Romain Francois. *dplyr: dplyr: a grammar of data manipulation*. R package version 0.2 (2014): <http://CRAN.R-project.org/package=dplyr>.
+
+[Wood and Townsend 2013] Wood, L. Maren, and Robert B. Townsend. *The Many Careers of History PhDs: A Study of Job Outcomes*. American Historical Association, 2013: <http://historians.org/Documents/Many_Careers_of_History_PhDs_Final.pdf>.
 
 [World Bank 2014-] World Bank. "Life expectancy at birth, total (years)." *World Bank Open Data*. Accessed 12 September 2014, http://data.worldbank.org/indicator/SP.DYN.LE00.IN.
