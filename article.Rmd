@@ -5,7 +5,6 @@ output: html_document
 ---
 
 ```{r load-libraries, include=FALSE}
-options(stringsAsFactors = FALSE)
 library(genderdata)
 library(gender)
 library(dplyr)
@@ -52,7 +51,9 @@ short_scale <- scale_x_continuous(breaks = seq(1950, 2010, 10),
                                   limits = c(1950, 2012))
 
 # I like 
-article_theme <- theme(legend.title = element_blank()) + theme_few()
+article_theme <- theme(legend.title = element_blank(),
+                       strip.background = element_rect(color = "white")) +
+  theme_classic()
 
 article_palette <- "Dark2"
 ```
@@ -446,32 +447,39 @@ ahr_predicted %>%
 ```
 
 The American Historical Association also categorizes their reviews under different historical sub-fields. Although the journal’s taxonomy has changed quite a bit over time, it did allow us to refine our analysis. Were there more reviews of female authors in certain sub-fields rather than others, and has that changed over the past forty years? Caribbean/Latin American history has had something approaching equal representation for the past decade-and-a-half. In both African history and Ancient/Medieval history female historians made some quite dramatic gains during the late-nineties and aughts. The most uneven parties, however, are also the two subject categories that publish the most book reviews in the *AHR*: Modern/Early Modern Europe and the United States/Canada. Both sub-fields have made progress over the four decades but still hover at around two-thirds male. Gender representation is not evenly distributed across the profession.
- 
-**Cameron: Do you have the mapping you use from the AHR's 68 categories to the 8 or so you used? With that, I just have one or two more lines to facet this plot. (It doesn't look right because it's not faceted yet.)**
 
-```{r}
+```{r reviews-by-category}
+categories <- read.csv("data/ahr-categories.csv", stringsAsFactors = FALSE)
+
 ahr_predicted %>%
-  filter(gender_author == "female") %>%
-  select(year, gender_reviewer, category) %>% 
-  group_by(year, gender_reviewer, category) %>%  
+  left_join(categories, by = "category") %>%
+  filter(gender_author == "female",
+         !our_category %in% c(NA, 
+                              "Latin and South America, Carribean",
+                              "Middle East")) %>%
+  select(year, gender_reviewer, our_category) %>% 
+  group_by(year, gender_reviewer, our_category) %>%  
   summarize(n = n()) %>%
   spread(gender_reviewer, n, fill = 0) %>% 
   mutate(female_proportion = female / (female + male + unknown),
          male_proportion = male / (female + male + unknown),
          unknown_proportion = unknown / (female + male + unknown)) %>%  
   select(female_proportion, male_proportion, unknown_proportion,
-         year, category) %>% 
-  gather(gender, proportion, -year, -category) %>%
+         year, our_category) %>% 
+  gather(gender, proportion, -year, -our_category) %>%
 ggplot(aes(x = year, y = proportion, fill = gender)) + 
   geom_bar(binwidth = 1, stat = "identity") +
-  ggtitle("Gender of reviewers of female book authors in AHR by category") +
+  facet_wrap(~ our_category) +
+  xlim(1970, 2012) +
+  ggtitle("Gender of reviewers of female AHR authors by category, 1970-2012") +
   xlab(NULL) + ylab(NULL) +
   theme(legend.position = "bottom") +
   geom_hline(yintercept = 0.5) +
   scale_fill_brewer(palette = article_palette,
-                    labels = c("Female", "Male", "Unknown")) +
+                    labels = c("Female", "Male", "Unknown"),
+                    name = "Gender") +
   article_theme +
-  short_scale
+  theme(strip.background = element_rect(color = "white"))
 ```
 
 
