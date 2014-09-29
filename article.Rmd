@@ -397,16 +397,37 @@ ahr_proportions %>%
   article_theme
 ```
  
-But a closer look shows important differences between the proportion of women writing history dissertations and the proportion of women appearing in the *AHR*. Although both have trended upwards since the 1970s the slope is a lot steeper for dissertations than it is for the *AHR*. Female historians have very nearly closed the gap in terms of newly completed dissertations, but the glass ceiling remains stubbornly low in terms of what happens from that point onwards. In book reviews published in the *AHR* male authors continue to outnumber female authors by a factor of nearly 2 to 1. The long-term gains made by female doctoral students do not carry over in the pages of the historical profession's leading journal.
+But a closer look shows important differences between the proportion of women writing history dissertations and the proportion of women appearing in the *AHR*. Although both have trended upwards since the 1970s the slope is a lot steeper for dissertations than it is for the *AHR*. Female historians have very nearly closed the gap in terms of newly completed dissertations, but the glass ceiling remains stubbornly low in terms of what happens from that point onwards. In book reviews published in the *AHR* male authors continue to outnumber female authors by a factor of nearly 2 to 1. The long-term gains made by female doctoral students do not carry over in the pages of the historical profession's leading journal.^[The chart below includes only authors whose gender we successfully inferred; it does not include authors of unknown gender as in the previous charts.]
  
 ```{r}
-diss_proportions$type <- "dissertation"
-ahr_proportions$type <- "book"
+ahr_proportions_no_unknown <- ahr_predicted %>%
+  select(year, gender_author) %>%  
+  group_by(year, gender_author) %>% 
+  summarize(n = n()) %>% 
+  spread(gender_author, n, fill = 0) %>%
+  mutate(female_proportion = female / (female + male),
+         male_proportion = male / (female + male)) %>%
+  select(female_proportion, male_proportion, year) %>%
+  gather(gender, proportion, -year)
 
-combined_proportions <- rbind(diss_proportions, ahr_proportions)
+diss_proportions_no_unknown <- diss_predicted %>%
+  select(year, gender_author) %>%
+  filter(year >= 1950) %>%
+  group_by(year, gender_author) %>% 
+  summarize(n = n()) %>% 
+  spread(gender_author, n, fill = 0) %>% 
+  mutate(female_proportion = female / (female + male),
+         male_proportion = male / (female + male)) %>%
+  select(female_proportion, male_proportion, year) %>%
+  gather(gender, proportion, -year)
+
+diss_proportions_no_unknown$type <- "dissertation"
+ahr_proportions_no_unknown$type <- "book"
+
+combined_proportions <- rbind(diss_proportions_no_unknown,
+                              ahr_proportions_no_unknown)
 
 combined_proportions %>%
-  filter(gender != "unknown_proportion") %>%
   ggplot(aes(x = year, y = proportion, color = gender, size = type)) + 
   geom_line() +
   short_scale +
