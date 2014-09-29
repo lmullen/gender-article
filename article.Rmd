@@ -420,7 +420,7 @@ combined_proportions %>%
   geom_hline(yintercept = 0.5)
 ```
 
-The path from a dissertation to a book review in the *American Historical Association* is not automatic. Not all dissertations are published as books, not all books are submitted to the *American Historical Review*, and not all book submissions are accepted by the *AHR* editors for review. As of September 2014 the journal's website reminds readers that "the AHR receives over 3,000 books a year; we have the resources to publish at most 1,000 reviews a year (approximately 200 per issue)." [American Historical Review n.d.] Fewer and fewer female historians make it through each successive step. Establishing a single causal reason for this pattern is all but impossible, and instead a murky concoction of interrelated factors likely contributes to the gap. For one, a 2010 survey by the American Historical Association revealed the female historians dedicated substantially more time to child and elder care than their male colleagues, leaving less time for research. This gender gap is more likely to impact the production of a book than a dissertation, as graduate students are generally younger and less likely to be juggling child-rearing responsibilities while writing than their older peers. More troublingly, women continue to face gender discrimination in the professional sphere.
+The path from a dissertation to a monograph to a book review in the *American Historical Association* isn't automatic. Not all dissertations are published as books, not all books are submitted to the *American Historical Review*, and not all book submissions are accepted by the *AHR* editors for review. As of September 2014 the journal's website reminds readers that "the AHR receives over 3,000 books a year; we have the resources to publish at most 1,000 reviews a year (approximately 200 per issue)." [American Historical Review n.d.] Fewer and fewer female historians make it through each successive step. Establishing a single causal reason for this pattern is all but impossible, and instead a murky concoction of interrelated factors likely contributes to the gap. For one, a 2010 survey by the American Historical Association revealed the female historians dedicated substantially more time to child and elder care than their male colleagues, leaving less time for research. This gender gap is more likely to impact the production of a book than a dissertation, as graduate students are generally younger and less likely to be juggling child-rearing responsibilities while writing than their older peers. More troublingly, women continue to face gender discrimination in the professional sphere.
  
 We  used our program to infer the gender of not just book authors reviewed by the *AHR*, but the gender of the reviewers themselves. The story is much the same for reviewers as it is for authors: more than than twice as many men as women appear as reviewers in the journal. But gender inflects book reviews in less direct ways by shaping who writes reviews of which book authors. About three times as many men write reviews of male-authored books as do women. In the case of female-authored books the ratio of female-to-male reviewers is much closer to 50/50. In short, women are much more likely to write reviews of other women. And while men still write the majority of reviews of female-authored books, they tend to gravitate more towards male authors – who are, of course, already over-represented in the *AHR*.
  
@@ -470,42 +470,6 @@ ahr_predicted %>%
                     labels = c("Female", "Male", "Unknown")) +
   article_theme +
   short_scale
-```
-
-The *AHR* also categorizes its reviews under different historical sub-fields. Although the journal’s taxonomy has changed quite a bit over time, it did allow us to refine our analysis. Were there more reviews of female authors in certain sub-fields rather than others, and has that changed over the past forty years? Caribbean/Latin American history has had something approaching equal representation for the past decade-and-a-half. In both African history and Ancient/Medieval history female historians made some quite dramatic gains during the late-nineties and aughts. The most uneven parties, however, are also the two subject categories that publish the most book reviews in the *AHR*: Modern/Early Modern Europe and the United States/Canada. Both sub-fields have made progress over the four decades but still hover at around two-thirds male. Gender representation is not evenly distributed across the profession.
-
-```{r reviews-by-category}
-categories <- read.csv("data/ahr-categories.csv", stringsAsFactors = FALSE)
-
-ahr_predicted %>%
-  left_join(categories, by = "category") %>%
-  filter(!our_category %in% c(NA, 
-                              "Articles",
-                              "Latin and South America, Carribean",
-                              "Middle East")) %>%
-  select(year, gender_author, our_category) %>% 
-  group_by(year, gender_author, our_category) %>%  
-  summarize(n = n()) %>%
-  spread(gender_author, n, fill = 0) %>% 
-  mutate(female_proportion = female / (female + male + unknown),
-         male_proportion = male / (female + male + unknown),
-         unknown_proportion = unknown / (female + male + unknown)) %>%  
-  select(female_proportion, male_proportion, unknown_proportion,
-         year, our_category) %>% 
-  gather(gender, proportion, -year, -our_category) %>%
-ggplot(aes(x = year, y = proportion, fill = gender)) + 
-  geom_bar(binwidth = 1, stat = "identity") +
-  facet_wrap(~ our_category) +
-  xlim(1970, 2012) +
-  ggtitle("Gender of AHR authors by book category, 1970-2012") +
-  xlab(NULL) + ylab(NULL) +
-  theme(legend.position = "bottom") +
-  geom_hline(yintercept = 0.5) +
-  scale_fill_brewer(palette = article_palette,
-                    labels = c("Female", "Male", "Unknown"),
-                    name = "Gender") +
-  article_theme +
-  theme(strip.background = element_rect(color = "white"))
 ```
 
 One 2013 analysis of 2,500 recent history Ph.D.'s found that "gender played little role in employment patterns across particular professions and industries" [Wood and Townsend 2013]. Our own analysis reveals that the story is different for book publishing than for employment. The flagship journal of professional historians continues to publish twice as many reviews of books by male authors as female authors. This disparity is put into even sharper relief when set against the relative parity achieved by women in producing history dissertations. Women might be getting hired at comparable rates to men, but discriminatory gatekeeping remains alive and well in the profession. Our program allows us to quantitatively measure the scope of the problem on a large scale and how it has changed over time.
