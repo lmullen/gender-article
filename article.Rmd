@@ -330,13 +330,15 @@ Our analysis focuses on one of the bedrocks of the historical profession: schola
 
 ```{r}
 diss_predicted %>%
+  mutate(gender_author = factor(gender_author, 
+                                levels = c("female", "unknown", "male"))) %>%
   ggplot(aes(x = year, fill = gender_author)) + 
   geom_bar(binwidth = 1) +
   ggtitle("Dissertations about history by gender, 1950-2012") +
   xlab(NULL) + ylab(NULL) +
   short_scale + theme(legend.position = "bottom") +
   scale_fill_brewer(palette = article_palette, name = "",
-                      labels = c("Female", "Male")) +
+                      labels = c("Female", "Unknown", "Male")) +
   article_theme
 ```
  
@@ -354,16 +356,21 @@ diss_proportions <- diss_predicted %>%
          unknown_proportion = unknown / (female + male + unknown)) %>% 
   select(female_proportion, male_proportion, unknown_proportion, year) %>%
   gather(gender, proportion, -year)
+
+diss_proportions$gender <- factor(diss_proportions$gender, 
+                                  levels = c("female_proportion", 
+                                             "unknown_proportion", 
+                                             "male_proportion"))
   
 diss_proportions  %>%
-  ggplot(aes(x = year, y = proportion, fill = gender)) +
+  ggplot(aes(x = year, y = proportion, fill = gender, order = gender)) +
   geom_bar(binwidth = 1, stat = "identity") +
   ggtitle("Proportion of dissertations about history by gender, 1950-2012") +
   xlab(NULL) + ylab(NULL) +
   short_scale + theme(legend.position = "bottom") +
   geom_hline(yintercept = 0.5) +
   scale_fill_brewer(palette = article_palette,
-                    labels = c("Female", "Male", "Unknown")) +
+                    labels = c("Female", "Unknown", "Male")) +
   article_theme
 ```
 
@@ -385,15 +392,20 @@ ahr_proportions <- ahr_predicted %>%
   select(female_proportion, male_proportion, unknown_proportion, year) %>%
   gather(gender, proportion, -year)
 
+ahr_proportions$gender <- factor(ahr_proportions$gender, 
+                                 levels = c("female_proportion", 
+                                            "unknown_proportion", 
+                                            "male_proportion"))
+
 ahr_proportions %>%
-  ggplot(aes(x = year, y = proportion, fill = gender)) + 
+  ggplot(aes(x = year, y = proportion, fill = gender, order = gender)) + 
   geom_bar(binwidth = 1, stat = "identity") +
   ggtitle("Authors of books reviewed in the AHR by gender") +
   xlab(NULL) + ylab(NULL) +
   theme(legend.position = "bottom") +
   geom_hline(yintercept = 0.5) +
   scale_fill_brewer(palette = article_palette,
-                      labels = c("Female", "Male", "Unknown")) +
+                      labels = c("Female", "Unknown", "Male")) +
   article_theme
 ```
  
@@ -457,14 +469,17 @@ ahr_predicted %>%
          unknown_proportion = unknown / (female + male + unknown)) %>%  
   select(female_proportion, male_proportion, unknown_proportion, year) %>%
   gather(gender, proportion, -year) %>%
-  ggplot(aes(x = year, y = proportion, fill = gender)) + 
+  mutate(gender = factor(gender, levels = c("female_proportion",
+                                            "unknown_proportion",
+                                            "male_proportion"))) %>%
+  ggplot(aes(x = year, y = proportion, fill = gender, order = gender)) + 
   geom_bar(binwidth = 1, stat = "identity") +
   ggtitle("Gender of reviewers of MALE book authors in AHR") +
   xlab(NULL) + ylab(NULL) +
   theme(legend.position = "bottom") +
   geom_hline(yintercept = 0.5) +
   scale_fill_brewer(palette = article_palette, 
-                    labels = c("Female", "Male", "Unknown")) +
+                    labels = c("Female", "Unknown", "Male")) +
   article_theme +
   short_scale
 ```
@@ -481,14 +496,17 @@ ahr_predicted %>%
          unknown_proportion = unknown / (female + male + unknown)) %>%  
   select(female_proportion, male_proportion, unknown_proportion, year) %>%
   gather(gender, proportion, -year) %>%
-  ggplot(aes(x = year, y = proportion, fill = gender)) + 
+  mutate(gender = factor(gender, levels = c("female_proportion",
+                                            "unknown_proportion",
+                                            "male_proportion"))) %>%
+  ggplot(aes(x = year, y = proportion, fill = gender, order = gender)) + 
   geom_bar(binwidth = 1, stat = "identity") +
   ggtitle("Gender of reviewers of FEMALE book authors in AHR") +
   xlab(NULL) + ylab(NULL) +
   theme(legend.position = "bottom") +
   geom_hline(yintercept = 0.5) +
   scale_fill_brewer(palette = article_palette, 
-                    labels = c("Female", "Male", "Unknown")) +
+                    labels = c("Female", "Unknown", "Male")) +
   article_theme +
   short_scale
 ```
