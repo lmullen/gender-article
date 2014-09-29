@@ -493,7 +493,9 @@ ahr_predicted %>%
   short_scale
 ```
 
-One 2013 analysis of 2,500 recent history Ph.D.'s found that "gender played little role in employment patterns across particular professions and industries" [Wood and Townsend 2013]. Our own analysis reveals that the story is different for book publishing than for employment. The flagship journal of professional historians continues to publish twice as many reviews of books by male authors as female authors. This disparity is put into even sharper relief when set against the relative parity achieved by women in producing history dissertations. Women might be getting hired at comparable rates to men, but discriminatory gatekeeping remains alive and well in the profession. Our program allows us to quantitatively measure the scope of the problem on a large scale and how it has changed over time.
+One 2013 analysis of 2,500 recent history Ph.D.'s found that "gender played little role in employment patterns across particular professions and industries" [Wood and Townsend 2013]. Our own analysis reveals that the story is different for book publishing than for employment. The flagship journal of professional historians continues to publish twice as many reviews of books by male authors as female authors. This disparity is put into even sharper relief when set against the relative parity achieved by women in producing history dissertations. Women might be getting hired at comparable rates to men, but discriminatory gatekeeping remains alive and well in the profession. 
+
+Our program allows us to quantitatively measure the scope of the problem on a large scale and how it has changed over time. [to write later: include thoughts how this is even more important as gender discrimination turns away from the out-in-the-open kind of discrimination to more subtle disadvantages and systemic problems.]
  
 ### Conclusion
  
