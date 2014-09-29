@@ -56,6 +56,10 @@ article_theme <- theme(legend.title = element_blank(),
   theme_classic()
 
 article_palette <- "Dark2"
+f_color <- "#8E001C"
+u_color <- "#D3CEAA"
+m_color <- "#4C4C4C"
+tri_color <- c(f_color, u_color, m_color) 
 ```
 
 ### Abstract
@@ -337,8 +341,11 @@ diss_predicted %>%
   ggtitle("Dissertations about history by gender, 1950-2012") +
   xlab(NULL) + ylab(NULL) +
   short_scale + theme(legend.position = "bottom") +
-  scale_fill_brewer(palette = article_palette, name = "",
-                      labels = c("Female", "Unknown", "Male")) +
+  scale_fill_manual(values=tri_color, name = "",
+                    labels = c("Female", "Unknown", "Male")) +
+  guides(fill = guide_legend(reverse = TRUE)) +
+  #scale_fill_brewer(palette = article_palette, name = "",
+  #                    labels = c("Female", "Unknown", "Male")) +
   article_theme
 ```
  
@@ -369,8 +376,11 @@ diss_proportions  %>%
   xlab(NULL) + ylab(NULL) +
   short_scale + theme(legend.position = "bottom") +
   geom_hline(yintercept = 0.5) +
-  scale_fill_brewer(palette = article_palette,
+  scale_fill_manual(values=tri_color, name = "",
                     labels = c("Female", "Unknown", "Male")) +
+  guides(fill = guide_legend(reverse = TRUE)) +
+  #scale_fill_brewer(palette = article_palette,
+  #                  labels = c("Female", "Unknown", "Male")) +
   article_theme
 ```
 
@@ -404,8 +414,11 @@ ahr_proportions %>%
   xlab(NULL) + ylab(NULL) +
   theme(legend.position = "bottom") +
   geom_hline(yintercept = 0.5) +
-  scale_fill_brewer(palette = article_palette,
-                      labels = c("Female", "Unknown", "Male")) +
+  scale_fill_manual(values=tri_color, name = "",
+                    labels = c("Female", "Unknown", "Male")) +
+  guides(fill = guide_legend(reverse = TRUE)) +
+  #scale_fill_brewer(palette = article_palette,
+  #                    labels = c("Female", "Unknown", "Male")) +
   article_theme
 ```
  
@@ -442,13 +455,23 @@ combined_proportions <- rbind(diss_proportions_no_unknown,
 combined_proportions %>%
   ggplot(aes(x = year, y = proportion, color = gender, size = type)) + 
   geom_line() +
-  short_scale +
+  scale_x_continuous(breaks = seq(1950, 2010, 10),
+                     labels = seq(1950, 2010, 10),
+                     limits = c(1950, 2025)) +
   scale_size_discrete(name = "Type",
                       labels = c("Book", "Dissertation"), range = c(2,1)) +
-  scale_color_brewer(palette = article_palette, name = "Gender",
-                       labels = c("Female", "Male")) +
+  scale_color_manual(values=c(f_color, m_color), name = "Gender",
+                    labels = c("Female", "Male")) +
+  guides(color=FALSE, size=FALSE) +
+  #guides(color = guide_legend(reverse = TRUE)) +
+  annotate("text", x = 2017, y = 0.77, label = "Male Authors\n (Books)", size=5, fontface="bold", color = m_color) +
+  annotate("text", x = 2020, y = 0.57, label = "Male Authors\n (Dissertations)", size=4, color = m_color) +
+  annotate("text", x = 2017, y = 0.23, label = "Female Authors\n (Books)", size=5, fontface="bold", color = f_color) +
+  annotate("text", x = 2020, y = 0.43, label = "Female Authors\n (Dissertations)", size=4, color = f_color) +
+  #scale_color_brewer(palette = article_palette, name = "Gender",
+  #                     labels = c("Female", "Male")) +
   xlab(NULL) + ylab("Proportion of authors by gender") +
-  ggtitle("The gap between the genders of book and dissertation authors") + 
+  ggtitle("Gender Gap of Dissertations and of Books Reviewed in the AHR") +
   article_theme +
   geom_hline(yintercept = 0.5)
 ```
@@ -478,8 +501,11 @@ ahr_predicted %>%
   xlab(NULL) + ylab(NULL) +
   theme(legend.position = "bottom") +
   geom_hline(yintercept = 0.5) +
-  scale_fill_brewer(palette = article_palette, 
+  scale_fill_manual(values=tri_color, name = "",
                     labels = c("Female", "Unknown", "Male")) +
+  guides(fill = guide_legend(reverse = TRUE)) +
+  #scale_fill_brewer(palette = article_palette, 
+  #                  labels = c("Female", "Unknown", "Male")) +
   article_theme +
   short_scale
 ```
@@ -505,8 +531,11 @@ ahr_predicted %>%
   xlab(NULL) + ylab(NULL) +
   theme(legend.position = "bottom") +
   geom_hline(yintercept = 0.5) +
-  scale_fill_brewer(palette = article_palette, 
+  scale_fill_manual(values=tri_color, name = "",
                     labels = c("Female", "Unknown", "Male")) +
+  guides(fill = guide_legend(reverse = TRUE)) +
+  #scale_fill_brewer(palette = article_palette, 
+  #                  labels = c("Female", "Unknown", "Male")) +
   article_theme +
   short_scale
 ```
