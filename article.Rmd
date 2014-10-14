@@ -2,6 +2,7 @@
 title: "Jane, John … Leslie? A Historical Method for Algorithmic Gender Prediction"
 author: "Cameron Blevins and Lincoln Mullen"
 output:
+  word_document: default
   html_document: default
 ---
 
@@ -66,7 +67,7 @@ tri_color <- c(f_color, u_color, m_color)
 
 ### Abstract
 
-This paper addresses two trends in the humanities: the use of gender as an analytical framework and the proliferation of large, machine-readable datasets. It outlines a new method for algorithmically inferring the gender of a name using historical data. In contrast to existing methods of predicting gender, this method takes into account how naming practices change over time and space. It provides a higher level of accuracy and a precise statement of the likelihood that a name was a given gender, especially for datasets where names can be associated with dates. The article describes the methodology as implemented in the [Gender](https://github.com/ropensci/gender) package for the [R programming language](http://www.r-project.org/). It goes on to apply the method to a case study in which we examine gender and gatekeeping in the history profession by inferring the gender of authors of history dissertations and of authors and reviewers in the *American Historical Review*. The Gender package illustrates how humanities scholars can make concrete methodologial contributions to computer science and related fields. 
+This paper addresses two trends in the humanities: the use of gender as an analytical framework and the proliferation of large, machine-readable datasets. It outlines a new method for algorithmically inferring the gender of a name using historical data. In contrast to existing methods of predicting gender, this method takes into account how naming practices change over time and space. It provides a higher level of accuracy and a precise statement of the likelihood that a name was a given gender, especially for datasets where names can be associated with dates. The article describes the methodology as implemented in the [Gender](https://github.com/ropensci/gender) package for the [R programming language](http://www.r-project.org/). It goes on to apply the method to a case study in which we examine gender and gatekeeping in the history profession by inferring the gender of authors of history dissertations and of authors and reviewers in the *American Historical Review*. The Gender package illustrates how humanities scholars can make concrete methodologial contributions to computer science and related fields.
 
 ### Introduction: The "Leslie Problem"
 
