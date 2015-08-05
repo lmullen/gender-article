@@ -3,7 +3,6 @@ title: "Jane, John … Leslie? A Historical Method for Algorithmic Gender Predic
 author: "Cameron Blevins and Lincoln Mullen"
 output:
   html_document: default
-  word_document: default
 ---
 
 ```{r load-libraries, include=FALSE}
