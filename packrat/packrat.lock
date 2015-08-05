@@ -1,6 +1,6 @@
 PackratFormat: 1.4
 PackratVersion: 0.4.1.1
-RVersion: 3.1.1
+RVersion: 3.2.1
 Repos: CRAN=http://cran.r-project.org
 
 Package: assertthat
@@ -227,14 +227,10 @@ Hash: b210925e978fd52ad5eb0822a353e7ce
 Requires: plyr, Rcpp, stringr
 
 Package: rmarkdown
-Source: github
-Version: 0.2.68
-Hash: d2474565b72d39ed83b32d3c92a2bb02f8ed03a5
+Source: CRAN
+Version: 0.7
+Hash: f3cd8debdfb8111446808eb31fe67688
 Requires: caTools, htmltools, knitr, yaml
-GithubRepo: rmarkdown
-GithubUsername: rstudio
-GithubRef: master
-GithubSha1: d2474565b72d39ed83b32d3c92a2bb02f8ed03a5
 
 Package: scales
 Source: CRAN
