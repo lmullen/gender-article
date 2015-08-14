@@ -94,7 +94,7 @@ leslie_df <- rbind(ipums_leslie, ssa_leslie) %>%
 
 leslie_df %>%
   ggplot(aes(x = year, y = prop_female)) +
-  geom_smooth() + 
+  geom_smooth(span = 0.5) + 
   geom_point() +
   ggtitle("Gender of the name Leslie, 1820-2012") +
   xlab(NULL) + ylab("Proportion of female uses") + ylim(0, 1) +
