@@ -255,13 +255,15 @@ genderdata::ssa_national %>%
          proportion_male   = 1 - proportion_female)
 ```
 
-In other words, there is an approximately `r gender("sidney", year = 1935)$proportion_male %>% percent()` percent chance that a person born in 1935 named Sidney was male. In 2012, for comparison, there was an approximately `r gender("sidney", year = 2012)$proportion_female %>% percent()` percent chance that a person born named Sidney was female.
+In other words, there is an approximately `r gender("sidney", year = 1935)$proportion_male %>% percent()` percent chance that a person born in 1935 named Sidney was male. In 2012, for comparison, there was an approximately `r gender("sidney", year = 2012)$proportion_female %>% percent()` percent chance that a person born named Sidney was female.^[The Gender package makes no effort to combine alternative spellings for names, such as Sidney and Sydney, since we think it is better to treat those as separate names. For instance, although they are homophones, Geri is predominately a female name, and Gerry is predominately a male name.]
 
 The method is only slightly more complex if we do not know the exact year when someone was born, as is often the case for historical data. Suppose we know that Sidney was born in the 1930s but cannot identify the exact year of his or her birth. Using the same method as above we can look up the name for all of those years.
 
 ```{r, echo=TRUE, results='markup'}
 genderdata::ssa_national %>%
-  filter(name == "sidney", year >= 1930 & year <= 1939) 
+  filter(name == "sidney", 
+         year >= 1930,
+         year <= 1939) 
 ```
 
 Next we can sum up the male and female columns ("summarize" in [dplyr](https://github.com/hadley/dplyr) package vocabulary) and calculate the proportions of female and male uses of "Sidney" during that decade.
