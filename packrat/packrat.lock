@@ -111,22 +111,22 @@ Hash: cce53206179a99ae5a8bcf154ab5abde
 
 Package: gender
 Source: github
-Version: 0.4.9002
-Hash: 3c5659ef11a1747dc24e76edfc85f51a
-Requires: dplyr, genderdata, httr, jsonlite
+Version: 0.5.0.9001
+Hash: fe111084217ab98cbba54555905bb509
+Requires: dplyr, httr, jsonlite
 GithubRepo: gender
 GithubUsername: ropensci
-GithubRef: develop
-GithubSha1: 4d022cab5134090256f396890f38a99b6da315ff
+GithubRef: master
+GithubSha1: 421f19687b616b417061f696c8876e8c749abe98
 
 Package: genderdata
 Source: github
-Version: 0.1
-Hash: ac7c28f3d8ca15f0ae9d098e77ada573
-GithubRepo: gender-data-pkg
-GithubUsername: lmullen
+Version: 0.5.0
+Hash: ab4bc513ce5bcbab6ec04056a146b335
+GithubRepo: genderdata
+GithubUsername: ropensci
 GithubRef: master
-GithubSha1: ba850f2c23f55d5d19acf6ccf0e180471636b6a1
+GithubSha1: ae29c3aa6615ab9cf4b28b9ef3201fecf246549e
 
 Package: ggplot2
 Source: CRAN
