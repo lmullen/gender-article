@@ -12,3 +12,4 @@ article_cache
 article_files
 data/h_diss2.csv
 packrat/src
+packrat/src/
