@@ -10,6 +10,7 @@ library(genderdata)
 library(gender)
 library(dplyr)
 library(ggplot2)
+library(gridExtra)
 library(mullenMisc)
 library(knitr)
 library(stringr)
@@ -246,7 +247,7 @@ genderdata::ssa_national %>%
   filter(name == "sidney", year == 1935)
 ```
 
-Thus, according to the Social Security Administration, there were 974 boys and 93 girls named Sidney born in 1935. We can add another command to calculate the *proportion* of females and males ("mutate" in the [dplyr](https://github.com/hadley/dplyr) package vocabulary) rather than raw numbers.
+Thus, according to the Social Security Administration, there were 974 boys and 93 girls named Sidney born in 1935. We can add another command to calculate the *proportion* of females and males ("mutate" in the vocabulary of the [dplyr](https://github.com/hadley/dplyr) package) rather than raw numbers.
 
 ```{r, echo=TRUE, results='markup'}
 genderdata::ssa_national %>%
@@ -261,9 +262,7 @@ The method is only slightly more complex if we do not know the exact year when s
 
 ```{r, echo=TRUE, results='markup'}
 genderdata::ssa_national %>%
-  filter(name == "sidney", 
-         year >= 1930,
-         year <= 1939) 
+  filter(name == "sidney", year >= 1930, year <= 1939) 
 ```
 
 Next we can sum up the male and female columns ("summarize" in [dplyr](https://github.com/hadley/dplyr) package vocabulary) and calculate the proportions of female and male uses of "Sidney" during that decade.
@@ -282,24 +281,21 @@ In other words, for the decade of the 1930s, we can calculate that there is a `r
 
 **Example #2: A Sample Dataset**
 
-The method's real utility stems from being able to process larger datasets than a single name. Let's use, for example, a hypothetical list of editors from a college newspaper to illustrate how a researcher might apply it to their own data. The package's prediction function allows researchers to choose which reference datasets they would like to use and the range of years for making their predictions.^[See the package vignette for more details: `vignette("predicting-gender", package = "gender")`.]
+The method's real utility stems from being able to process larger datasets than a single name. Let's use, for example, a hypothetical list of editors from a college newspaper to illustrate how a researcher might apply it to their own data. The package's prediction function allows researchers to choose which reference datasets they would like to use and the range of years for making their predictions.
 
-```{r}
-editors <- data.frame(name = c("Madison", "Madison", "Morgan",
+```{r, echo=FALSE}
+editors <- data_frame(name = c("Madison", "Madison", "Morgan",
                                   "Morgan", "Jan", "Jan"),
-                         birth_year = c(1934, 1990, 1948, 1970, 1965, 1998),
-                         stringsAsFactors = FALSE) %>% tbl_df()
+                         birth_year = c(1934, 1990, 1948, 1970, 1965, 1998))
 ```
 
 ```{r, echo=TRUE, results='markup'}
 editors
 ```
 
-The simplest way to use the package would be to call the `gender()` function, specifying the method, in this case the Social Security Administration dataset since all the names are after 1930, and convert the results to a data frame (one of R's native data structures).
+The simplest way to use the package would be to call the `gender()` function, specifying the method, in this case the Social Security Administration dataset since all the names are after 1930, and specify the range of years in the dataset. However, using 
 
-```{r, echo=TRUE, results='markup'}
-gender(editors$name, method = "ssa") %>% do.call(rbind.data.frame, .)
-```
+^[See the [package vignette](https://cran.rstudio.com/web/packages/gender/vignettes/predicting-gender.html) for more details about how to use the package effectively, including suggestions about performance: `vignette("predicting-gender", package = "gender")`.]
 
 This basic call of the `gender()` function would be suitable if we did not know the birth year for each editor. But we can also specify that information in the `gender()` function by using this call:
 
