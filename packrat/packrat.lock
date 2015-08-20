@@ -1,7 +1,7 @@
 PackratFormat: 1.4
 PackratVersion: 0.4.1.1
 RVersion: 3.2.1
-Repos: CRAN=http://cran.r-project.org
+Repos: CRAN=https://cran.rstudio.com
 
 Package: assertthat
 Source: CRAN
