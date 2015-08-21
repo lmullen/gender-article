@@ -284,31 +284,26 @@ In other words, for the decade of the 1930s, we can calculate that there is a `r
 The method's real utility stems from being able to process larger datasets than a single name. Let's use, for example, a hypothetical list of editors from a college newspaper to illustrate how a researcher might apply it to their own data. The package's prediction function allows researchers to choose which reference datasets they would like to use and the range of years for making their predictions.
 
 ```{r, echo=FALSE}
-editors <- data_frame(name = c("Madison", "Madison", "Morgan",
-                                  "Morgan", "Jan", "Jan"),
-                         birth_year = c(1934, 1990, 1948, 1970, 1965, 1998))
+editors <- data_frame(name = c("Madison", "Madison", "Morgan", "Morgan",
+                               "Jan", "Jan"),
+                      birth_year = c(1934, 1990, 1948, 1970, 1965, 1998))
 ```
 
 ```{r, echo=TRUE, results='markup'}
 editors
 ```
 
-The simplest way to use the package would be to call the `gender()` function, specifying the method, in this case the Social Security Administration dataset since all the names are after 1930, and specify the range of years in the dataset. However, using 
+The simplest way to use the package would be to call the `gender()` function, specifying the method, in this case the Social Security Administration dataset since all the names are after 1930, and specifying a single range of years to make the predictions. However, we can instead use the `gender_df()` function provided by the package. By passing it our data frame of people and specifying which columns contain the names and birth years (or a columns containing a minimum and maximum for a range of years), we can efficiently predict the gender for each person.^[See the [package vignette](https://cran.rstudio.com/web/packages/gender/vignettes/predicting-gender.html) for more details about how to use the package effectively, including suggestions about performance: `browseVignettes( "gender")`.]
 
-^[See the [package vignette](https://cran.rstudio.com/web/packages/gender/vignettes/predicting-gender.html) for more details about how to use the package effectively, including suggestions about performance: `vignette("predicting-gender", package = "gender")`.]
-
-This basic call of the `gender()` function would be suitable if we did not know the birth year for each editor. But we can also specify that information in the `gender()` function by using this call:
-
-```{r, echo=TRUE, results='markup'}
-Map(gender, editors$name, years = editors$birth_year) %>% 
-  do.call(rbind.data.frame, .) %>% print.data.frame(row.names = FALSE)
+```{r}
+gender_df(editors, name_col = "name", year_col = "birth_year")
 ```
 
 By taking into account the year of birth, we find that four of our six names were likely male, whereas we might otherwise have predicted that all six were female. We also now know the approximate likelihood that our predictions are correct: at least 80% for all of these predictions. 
 
-It is also possible to use a range of years for a dataset like this. If our list of editors contained the year in which the person served on the newspaper rather than the birth year, we could make a reasonable assumption that their ages were likely to be between 18 and 24. We could then calculate a minimum and a maximum year of birth for each, and run the prediction function on that range for each person. The exact code to accomplish these types of analysis can be found in the Gender package's vignette.
+It is also possible to use a range of years for a dataset like this. If our list of editors contained the year in which the person served on the newspaper rather than the birth year, we could make a reasonable assumption that their ages were likely to be between 18 and 24. We could then calculate a minimum and a maximum year of birth for each, and run the prediction function on that range for each person. The exact code to accomplish these types of analysis can be found in the [vignette for the gender package](https://cran.rstudio.com/web/packages/gender/vignettes/predicting-gender.html).
 
-As previously mentioned, the history of how the Social Security Administration collected the data effects its validity. Specifically, because the data extends back to 1880 but the first applications were gathered after 1935, the sex ratios in the dataset are skewed in the years before 1930. For example, this dataset implies that thirty percent of the people born in 1900 were male. 
+As previously mentioned, the history of how the Social Security Administration collected the data affects its validity. Specifically, because the data extends back to 1880 but the first applications were gathered after 1935, the sex ratios in the dataset are skewed in the years before 1930. For example, this dataset implies that thirty percent of the people born in 1900 were male. 
 
 ```{r figure03}
 genderdata::ssa_national %>%
@@ -322,7 +317,7 @@ genderdata::ssa_national %>%
 ```
 **Figure 3: Percentage of SSA dataset that is female**
 
-It is extremely improbable that nearly seventy percent of the people born in 1900 were female. Exactly why the dataset has this bias is unclear, though we speculate that it is because the applicants for Social Security in the early years of the program were approaching retirement age, which was set much closer to the average life expectancy in 1935 than it is today. Since women tend to live longer than men, they were overrepresented in Social Security applications.
+It is extremely improbable that nearly seventy percent of the people born in 1900 were female.^[We are grateful to Ben Schmidt for drawing out attention to this phenomenon.] Exactly why the dataset has this bias is unclear, though we speculate that it is because the applicants for Social Security in the early years of the program were approaching retirement age, which was set much closer to the average life expectancy in 1935 than it is today. Since women tend to live longer than men, they were overrepresented in Social Security applications.
 
 The solution to this problem is two-fold. First, we recommend that researchers use the IPUMS-USA dataset to make predictions for years from 1790 to 1930 (which avoids the "bubble" in the SSA data) and that they use the SSA dataset for years after 1930.^[The IPUMS-USA dataset includes only apparently random fluctuations in the gender ratio in any given year.] Second, we have built in a correction to the SSA dataset when using the `gender()` function. If we assume that the secondary sex ratio (that is, the ratio of male to female births) in any given year does not deviate from `0.5` (that is, equality), it is possible to calculate a correction factor for each year or range of years to even out the dataset. We apply this correction factor automatically when using the SSA dataset.
 
