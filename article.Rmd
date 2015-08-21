@@ -555,7 +555,7 @@ The digital turn has made large datasets widely available, yet in the midst of a
 
 The gender package is entirely open-source, and we have provided detailed documentation for its code and underlying data so that researchers who wish to build upon it can modify the package accordingly. By building as much flexibility and transparency into the method as possible, we hope that others can continue to make just these kinds of improvements.
 
-As it currently stands, the Gender package meets a pressing methodological need. Since its initial release in February 2014, the Gender package has been downloaded more than **________ times [??????]** and incorporated as a pedagogical tool within digital humanities courses [Jockers 2014b]. Researchers have used it to uncover instances gender inequity in a range of different areas, from biases in students' teaching evaluations to disparities between attendees and authors at the annual Digital Humanities Conference [Schmidt 2015, Weingart 2015]. These implementations help illustrate the value of the method. Its major intervention is to algorithmically inferring gender in textual sources in a way that takes into account change over time. Rather than trying to shoehorn existing computer science methods to fit humanities research, the Gender package reverses this traditional disciplinary relationship. It uses a humanistic starting point---the historical relationship between gender and naming practices---to contribute a new method to computer science.
+As it currently stands, the gender package meets a pressing methodological need. As of August 2015, the Gender package has been downloaded more than 21,000 times and incorporated as a pedagogical tool within digital humanities courses [Jockers 2014b].^[The download counts come from the [download logs from RStudio's CRAN mirror](http://cran-logs.rstudio.com/) as tabulated by Gabor Csardi's [cranlogs package](http://cranlogs.r-pkg.org/). [Csardi 2015]) Researchers have used it to uncover instances gender inequity in a range of different areas, from biases in students' teaching evaluations to disparities between attendees and authors at the annual Digital Humanities Conference [Schmidt 2015, Weingart 2015]. These implementations help illustrate the value of the method. Its major intervention is to algorithmically inferring gender in textual sources in a way that takes into account change over time. Rather than trying to shoehorn existing computer science methods to fit humanities research, the Gender package reverses this traditional disciplinary relationship. It uses a humanistic starting point---the historical relationship between gender and naming practices---to contribute a new method to computer science.
 
 ### References
 
@@ -578,6 +578,8 @@ As it currently stands, the Gender package meets a pressing methodological need.
 [Canaday 2011] Canaday, Margot. *The Straight State: Sexuality and Citizenship in Twentieth-Century America*. Princeton, N.J.: Princeton University Press, 2011.
 
 [Crenshaw 1991] Crenshaw, Kimberle. "Mapping the Margins: Intersectionality, Identity Politics, and Violence against Women of Color." *Stanford Law Review*. 43.6 (July 1991): 1241-1299.
+
+[Csardi 2015]  Csardi, Gabor. cranlogs: Download Logs from the RStudio CRAN Mirror. R package version 2.0.0 (2015): <http://CRAN.R-project.org/package=cranlogs>
 
 [Genderize.io n.d.] *Genderize.io*. http://genderize.io/. Accessed 15 September 2014.
 
