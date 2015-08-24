@@ -2,8 +2,12 @@
 title: "Jane, John … Leslie? A Historical Method for Algorithmic Gender Prediction"
 author: "Cameron Blevins and Lincoln Mullen"
 output:
-  html_document: default
-  word_document: default
+  html_document: 
+    self_contained: false
+  word_document:
+    pandoc_args: [
+      "--smart"
+    ]
 ---
 
 ```{r load-libraries, include=FALSE}
