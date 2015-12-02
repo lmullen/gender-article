@@ -291,14 +291,12 @@ The method's real utility stems from being able to process larger datasets than 
 ```{r, echo=FALSE}
 editors <- data_frame(name = c("Madison", "Madison", "Morgan", "Morgan",
                                "Jan", "Jan"),
-                      birth_year = c(1934, 1990, 1948, 1970, 1965, 1998))
+                      year = c(1934, 1990, 1948, 1970, 1965, 1998))
 ```
 
 ```{r, echo=TRUE, results='markup'}
-editors
+gender_df(editors, method = "ssa")
 ```
-
-
 
 By taking into account the year of birth, we find that four of our six names were likely male, whereas we might otherwise have predicted that all six were female. We also now know the approximate likelihood that our predictions are correct: at least 80% for all of these predictions. 
 
